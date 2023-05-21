@@ -1,3 +1,6 @@
 [submodule "busted"]
 	path = busted
 	url = https://github.com/lunarmodules/busted
+[submodule "fennel"]
+	path = fennel
+	url = https://git.sr.ht/~technomancy/fennel

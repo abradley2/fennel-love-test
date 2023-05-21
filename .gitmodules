@@ -4,3 +4,6 @@
 [submodule "fennel"]
 	path = fennel
 	url = https://git.sr.ht/~technomancy/fennel
+[submodule "fnlfmt"]
+	path = fnlfmt
+	url = https://git.sr.ht/~technomancy/fnlfmt

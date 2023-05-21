@@ -115,12 +115,12 @@
 
 (fn love.keyreleased [key]
   (tset -keyboard key false)
-  (if (-> false 
+  (if (-> false
           (or (= true (. -keyboard :up)))
           (or (= true (. -keyboard :down)))
           (or (= true (. -keyboard :left)))
           (or (= true (. -keyboard :right))))
-      (-> false 
+      (-> false
           (or (when (. -keyboard :up) (handle-player-movement :up)))
           (or (when (. -keyboard :down) (handle-player-movement :down)))
           (or (when (. -keyboard :left) (handle-player-movement :left)))

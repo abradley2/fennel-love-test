@@ -7,12 +7,13 @@ test: .local/ .local/busted/
 clean:
 	rm -rf .local/
 	cd fennel && make clean
+	cd fnlfmt && make clean
 
 run:
 	fennel --compile main.fnl > main.lua && ~/lib/love.app/Contents/MacOS/love .
 
-lint:
-	fnlfmt --fix main.fnl
+lint: .local/fnlfmt
+	.local/fnlfmt/bin/fnlfmt --fix main.fnl
 
 .local/:
 	mkdir .local
@@ -29,3 +30,8 @@ busted/:
 fennel/:
 	git submodule update --init fennel
 
+.local/fnlfmt: .local/ fnlfmt/
+	cd fnlfmt && PREFIX="../.local/fnlfmt" make install
+
+fnlfmt/:
+	git submodule update --init fnlfmt

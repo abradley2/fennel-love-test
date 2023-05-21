@@ -19,16 +19,16 @@ lint: .local/fnlfmt
 	cd busted && luarocks --tree ../.local/busted/ make
 
 busted/:
-	git submodule update busted
+	git submodule update busted --init
 
 .local/fennel: .local/ fennel/
 	cd fennel && make fennel && mv fennel ../.local/fennel
 
 fennel/:
-	git submodule update  fennel
+	git submodule update  fennel --init
 
 .local/fnlfmt: .local/ fnlfmt/
 	cd fnlfmt && PREFIX="../.local/fnlfmt" make install
 
 fnlfmt/:
-	git submodule update fnlfmt
+	git submodule update fnlfmt --init

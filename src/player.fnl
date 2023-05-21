@@ -68,7 +68,8 @@
           (do
             (tset player-state :x (+ (. player-state :x) speed))
             player-state)))
-      nil))
+      nil)
+  player-state)
 
 (fn handle-player-movement [player-state key]
   (case key
@@ -91,7 +92,8 @@
     (do
       (tset player-state :moving true)
       (tset player-state :direction :right)
-      (tset player-state :direction-delta 0))))
+      (tset player-state :direction-delta 0)))
+  player-state)
 
 {:player-sprite-sheet -player-sprite-sheet
  :player-sprite-quads -player-sprite-quads

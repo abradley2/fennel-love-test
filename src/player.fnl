@@ -18,15 +18,18 @@
                 (love.graphics.newQuad 90 0 16 16
                                        (-player-sprite-sheet:getDimensions))]})
 
-(local -player-state {:x (- (/ GAME-WIDTH 2) 32)
-                      :y (- (/ GAME-HEIGHT 2) 32)
-                      :moving false
-                      :direction :down
-                      :direction-delta 0
-                      :delta-per-frame 36
-                      :speed 6
-                      :sprite-quad (-> (. -player-sprite-quads :down)
-                                       (. 1))})
+(fn -init-player-state []
+  {:x (- (/ GAME-WIDTH 2) 32)
+   :y (- (/ GAME-HEIGHT 2) 32)
+   :moving false
+   :direction :down
+   :direction-delta 0
+   :delta-per-frame 36
+   :speed 6
+   :sprite-quad (-> (. -player-sprite-quads :down)
+                    (. 1))})
+
+(local -player-state (-init-player-state))
 
 (fn choose-sprite-quad [sprite-quads delta delta-per-frame]
   (let [cur-frame (+ 1 (math.floor (/ delta delta-per-frame)))]

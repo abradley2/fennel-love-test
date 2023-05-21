@@ -1,5 +1,5 @@
 build: .local/fennel
-	./local/fennel --compile main.fnl > main.lua
+	.local/fennel --compile main.fnl > main.lua
 
 test: .local/ .local/busted/
 	.local/busted/bin/busted

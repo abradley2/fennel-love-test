@@ -2,6 +2,10 @@ build: .local/fennel
 	.local/fennel --compile src/player.fnl > src/player.lua
 	.local/fennel --compile main.fnl > main.lua
 
+lint: .local/fnlfmt
+	.local/fnlfmt/bin/fnlfmt --fix src/player.fnl
+	.local/fnlfmt/bin/fnlfmt --fix main.fnl
+
 test: .local/ .local/busted/
 	.local/busted/bin/busted
 
@@ -9,9 +13,6 @@ clean:
 	rm -rf .local/
 	cd fennel && make clean
 	cd fnlfmt && make clean
-
-lint: .local/fnlfmt
-	.local/fnlfmt/bin/fnlfmt --fix main.fnl
 
 .local/:
 	mkdir .local

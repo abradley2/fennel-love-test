@@ -1,4 +1,3 @@
-
 (local -player-sprite-sheet (love.graphics.newImage :player_sprite_sheet.png))
 
 (local -player-sprite-quads
@@ -74,32 +73,26 @@
     (do
       (tset player-state :moving true)
       (tset player-state :direction :up)
-      (tset player-state :direction-delta 0)
-      true)
+      (tset player-state :direction-delta 0))
     :down
     (do
       (tset player-state :moving true)
       (tset player-state :direction :down)
-      (tset player-state :direction-delta 0)
-      true)
+      (tset player-state :direction-delta 0))
     :left
     (do
       (tset player-state :moving true)
       (tset player-state :direction :left)
-      (tset player-state :direction-delta 0)
-      true)
+      (tset player-state :direction-delta 0))
     :right
     (do
       (tset player-state :moving true)
       (tset player-state :direction :right)
-      (tset player-state :direction-delta 0)
-      true)))
+      (tset player-state :direction-delta 0))))
 
-
-{ :player-sprite-sheet -player-sprite-sheet 
-  :player-sprite-quads -player-sprite-quads
-  :player-state -player-state
-  :choose-sprite-quad choose-sprite-quad
-  :run-player-state run-player-state
-  :handle-player-movement handle-player-movement
-}
+{:player-sprite-sheet -player-sprite-sheet
+ :player-sprite-quads -player-sprite-quads
+ :player-state -player-state
+ : choose-sprite-quad
+ : run-player-state
+ : handle-player-movement}

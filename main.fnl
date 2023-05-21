@@ -8,8 +8,9 @@
 
 (fn love.update [dt]
   (let [speed-delta (/ dt 0.0166)]
-    (player.run-player-state (* (. player.player-state :speed) speed-delta) player.player-state
-                      player.player-sprite-quads -keyboard)))
+    (player.run-player-state (* (. player.player-state :speed) speed-delta)
+                             player.player-state player.player-sprite-quads
+                             -keyboard)))
 
 (fn love.keypressed [key]
   (do
@@ -34,5 +35,6 @@
         (tset player.player-state :direction-delta 0))))
 
 (fn love.draw []
-  (love.graphics.draw player.player-sprite-sheet (. player.player-state :sprite-quad)
+  (love.graphics.draw player.player-sprite-sheet
+                      (. player.player-state :sprite-quad)
                       (. player.player-state :x) (. player.player-state :y) 0 4))

@@ -1,4 +1,5 @@
 build: .local/fennel
+	.local/fennel --compile src/player.fnl > src/player.lua
 	.local/fennel --compile main.fnl > main.lua
 
 test: .local/ .local/busted/

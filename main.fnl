@@ -1,117 +1,21 @@
 (love.window.setMode 0 0)
 
-(fn choose-sprite-quad [sprite-quads delta delta-per-frame]
-  (let [cur-frame (+ 1 (math.floor (/ delta delta-per-frame)))]
-    (if (. sprite-quads cur-frame)
-        [(. sprite-quads cur-frame) delta]
-        (choose-sprite-quad sprite-quads 0 delta-per-frame))))
+(global (GAME-WIDTH GAME-HEIGHT) (love.window.getMode))
 
-(fn run-player-state [speed player-state player-sprite-quads keyboard]
-  (let [[sprite-quad next-delta] (choose-sprite-quad (->> (. player-state
-                                                             :direction)
-                                                          (. player-sprite-quads))
-                                                     (. player-state
-                                                        :direction-delta)
-                                                     (. player-state
-                                                        :delta-per-frame))]
-    (tset player-state :direction-delta next-delta)
-    (tset player-state :sprite-quad sprite-quad))
-  (if (. player-state :moving)
-      (do
-        (tset player-state :direction-delta
-              (+ (. player-state :direction-delta) speed))
-        (case (. player-state :direction)
-          :up
-          (do
-            (tset player-state :y (- (. player-state :y) speed))
-            player-state)
-          :down
-          (do
-            (tset player-state :y (+ (. player-state :y) speed))
-            player-state)
-          :left
-          (do
-            (tset player-state :x (- (. player-state :x) speed))
-            player-state)
-          :right
-          (do
-            (tset player-state :x (+ (. player-state :x) speed))
-            player-state)))
-      nil))
-
-(fn handle-player-movement [player-state key]
-  (case key
-    :up
-    (do
-      (tset player-state :moving true)
-      (tset player-state :direction :up)
-      (tset player-state :direction-delta 0)
-      true)
-    :down
-    (do
-      (tset player-state :moving true)
-      (tset player-state :direction :down)
-      (tset player-state :direction-delta 0)
-      true)
-    :left
-    (do
-      (tset player-state :moving true)
-      (tset player-state :direction :left)
-      (tset player-state :direction-delta 0)
-      true)
-    :right
-    (do
-      (tset player-state :moving true)
-      (tset player-state :direction :right)
-      (tset player-state :direction-delta 0)
-      true)))
-
-(local -player-sprite-sheet (love.graphics.newImage :player_sprite_sheet.png))
-
-(local -player-sprite-quads
-       {:down [(love.graphics.newQuad 0 0 16 16
-                                      (-player-sprite-sheet:getDimensions))
-               (love.graphics.newQuad 0 30 16 16
-                                      (-player-sprite-sheet:getDimensions))]
-        :left [(love.graphics.newQuad 30 0 16 16
-                                      (-player-sprite-sheet:getDimensions))
-               (love.graphics.newQuad 30 30 16 16
-                                      (-player-sprite-sheet:getDimensions))]
-        :up [(love.graphics.newQuad 60 0 16 16
-                                    (-player-sprite-sheet:getDimensions))
-             (love.graphics.newQuad 60 30 16 16
-                                    (-player-sprite-sheet:getDimensions))]
-        :right [(love.graphics.newQuad 90 30 16 16
-                                       (-player-sprite-sheet:getDimensions))
-                (love.graphics.newQuad 90 0 16 16
-                                       (-player-sprite-sheet:getDimensions))]})
-
-(local (w h) (love.window.getMode))
-
-(local -player-state {:x (- (/ w 2) 32)
-                      :y (- (/ h 2) 32)
-                      :moving false
-                      :direction :down
-                      :direction-delta 0
-                      :delta-per-frame 48
-                      :speed 6
-                      :sprite-quad (-> (. -player-sprite-quads :down)
-                                       (. 1))})
+(local player (require :src.player))
 
 (local -keyboard {:up false :down false :left false :right false})
 
 (fn love.update [dt]
   (let [speed-delta (/ dt 0.0166)]
-    (run-player-state (* (. -player-state :speed) speed-delta) -player-state
-                      -player-sprite-quads -keyboard)))
+    (player.run-player-state (* (. player.player-state :speed) speed-delta) player.player-state
+                      player.player-sprite-quads -keyboard)))
 
 (fn love.keypressed [key]
   (do
     (when (= :escape key) (love.event.quit))
     (tset -keyboard key true)
-    (handle-player-movement -player-state key)
-    else
-    false))
+    (player.handle-player-movement player.player-state key)))
 
 (fn love.keyreleased [key]
   (tset -keyboard key false)
@@ -121,14 +25,14 @@
           (or (= true (. -keyboard :left)))
           (or (= true (. -keyboard :right))))
       (-> false
-          (or (when (. -keyboard :up) (handle-player-movement :up)))
-          (or (when (. -keyboard :down) (handle-player-movement :down)))
-          (or (when (. -keyboard :left) (handle-player-movement :left)))
-          (or (when (. -keyboard :right) (handle-player-movement :right))))
+          (or (when (. -keyboard :up) (player.handle-player-movement :up)))
+          (or (when (. -keyboard :down) (player.handle-player-movement :down)))
+          (or (when (. -keyboard :left) (player.handle-player-movement :left)))
+          (or (when (. -keyboard :right) (player.handle-player-movement :right))))
       (do
-        (tset -player-state :moving false)
-        (tset -player-state :direction-delta 0))))
+        (tset player.player-state :moving false)
+        (tset player.player-state :direction-delta 0))))
 
 (fn love.draw []
-  (love.graphics.draw -player-sprite-sheet (. -player-state :sprite-quad)
-                      (. -player-state :x) (. -player-state :y) 0 4))
+  (love.graphics.draw player.player-sprite-sheet (. player.player-state :sprite-quad)
+                      (. player.player-state :x) (. player.player-state :y) 0 4))

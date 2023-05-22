@@ -1,4 +1,4 @@
-(local -player-sprite-sheet (love.graphics.newImage :player_sprite_sheet.png))
+(local -player-sprite-sheet (love.graphics.newImage :assets/player_sprite_sheet.png))
 
 (local -player-sprite-quads
        {:down [(love.graphics.newQuad 0 0 16 16

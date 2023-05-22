@@ -1,0 +1,15 @@
+{ "columns":9,
+ "image":"overworld_sprite_sheet.png",
+ "imageheight":86,
+ "imagewidth":154,
+ "margin":1,
+ "name":"overworld_tiles",
+ "spacing":1,
+ "tilecount":45,
+ "tiledversion":"1.10.1",
+ "tileheight":16,
+ "tilewidth":16,
+ "transparentcolor":"#ff00ff",
+ "type":"tileset",
+ "version":"1.10"
+}

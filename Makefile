@@ -1,8 +1,10 @@
 build: .local/fennel
+	.local/fennel --compile src/world.fnl > src/world.lua
 	.local/fennel --compile src/player.fnl > src/player.lua
 	.local/fennel --compile main.fnl > main.lua
 
 lint: .local/fnlfmt
+	.local/fnlfmt/bin/fnlfmt --fix src/world.fnl
 	.local/fnlfmt/bin/fnlfmt --fix src/player.fnl
 	.local/fnlfmt/bin/fnlfmt --fix main.fnl
 

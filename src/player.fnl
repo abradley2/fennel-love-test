@@ -1,4 +1,5 @@
-(local -player-sprite-sheet (love.graphics.newImage :assets/player_sprite_sheet.png))
+(local -player-sprite-sheet
+       (love.graphics.newImage :assets/player_sprite_sheet.png))
 
 (local -player-sprite-quads
        {:down [(love.graphics.newQuad 0 0 16 16
@@ -19,13 +20,13 @@
                                        (-player-sprite-sheet:getDimensions))]})
 
 (fn -init-player-state []
-  {:x (- (/ GAME-WIDTH 2) 32)
-   :y (- (/ GAME-HEIGHT 2) 32)
+  {:x 0
+   :y 0
    :moving false
    :direction :down
    :direction-delta 0
-   :delta-per-frame 36
-   :speed 6
+   :delta-per-frame 8
+   :speed 2
    :sprite-quad (-> (. -player-sprite-quads :down)
                     (. 1))})
 

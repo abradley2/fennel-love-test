@@ -1,8 +1,7 @@
-(love.window.setMode 0 0)
-
 (global (GAME-WIDTH GAME-HEIGHT) (love.window.getMode))
 
 (local player (require :src.player))
+(local world (require :src.world))
 
 (local -keyboard {:up false :down false :left false :right false})
 
@@ -35,6 +34,9 @@
         (tset player.player-state :direction-delta 0))))
 
 (fn love.draw []
+  (each [_ tile (pairs world.tiles)]
+    (love.graphics.draw world.overworld-sprite-sheet (. tile :quad) (. tile :x)
+                        (. tile :y) 0 1))
   (love.graphics.draw player.player-sprite-sheet
                       (. player.player-state :sprite-quad)
-                      (. player.player-state :x) (. player.player-state :y) 0 4))
+                      (. player.player-state :x) (. player.player-state :y) 0 1))

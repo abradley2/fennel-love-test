@@ -1,7 +1,7 @@
 __fnl_global__GAME_2dWIDTH, __fnl_global__GAME_2dHEIGHT = love.window.getMode()
 local player = require("src.player")
 local world = require("src.world")
-local _keyboard = {down = false, left = false, right = false, up = false}
+local _keyboard = {right = false, up = false, left = false, down = false}
 love.update = function(dt)
   local speed_delta = (dt / 0.0166)
   return player["run-player-state"](((player["player-state"]).speed * speed_delta), player["player-state"], player["player-sprite-quads"], _keyboard)

@@ -9,7 +9,7 @@
   (let [speed-delta (/ dt 0.0166)]
     (player.run-player-state (* (. player.player-state :speed) speed-delta)
                              player.player-state player.player-sprite-quads
-                             -keyboard)))
+                             -keyboard world.tiles)))
 
 (fn love.keypressed [key]
   (do

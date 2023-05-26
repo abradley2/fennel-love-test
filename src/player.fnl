@@ -38,7 +38,12 @@
         [(. sprite-quads cur-frame) delta]
         (choose-sprite-quad sprite-quads 0 delta-per-frame))))
 
-(fn run-player-state [speed player-state player-sprite-quads keyboard]
+(fn handle-collisions [[next-x next-y] player-state tiles]
+  (let [direction (. player-state :direction)]
+    (tset player-state :x next-x)
+    (tset player-state :y next-y)))
+
+(fn run-player-state [speed player-state player-sprite-quads keyboard tiles]
   (let [[sprite-quad next-delta] (choose-sprite-quad (->> (. player-state
                                                              :direction)
                                                           (. player-sprite-quads))
@@ -52,23 +57,16 @@
       (do
         (tset player-state :direction-delta
               (+ (. player-state :direction-delta) speed))
-        (case (. player-state :direction)
-          :up
-          (do
-            (tset player-state :y (- (. player-state :y) speed))
-            player-state)
-          :down
-          (do
-            (tset player-state :y (+ (. player-state :y) speed))
-            player-state)
-          :left
-          (do
-            (tset player-state :x (- (. player-state :x) speed))
-            player-state)
-          :right
-          (do
-            (tset player-state :x (+ (. player-state :x) speed))
-            player-state)))
+        (-> (case (. player-state :direction)
+              :up
+              [(. player-state :x) (- (. player-state :y) speed)]
+              :down
+              [(. player-state :x) (+ (. player-state :y) speed)]
+              :left
+              [(- (. player-state :x) speed) (. player-state :y)]
+              :right
+              [(+ (. player-state :x) speed) (. player-state :y)])
+            (handle-collisions player-state tiles)))
       nil)
   player-state)
 

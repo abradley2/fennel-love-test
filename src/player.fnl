@@ -1,25 +1,20 @@
-(local -player-sprite-sheet
-       (love.graphics.newImage :assets/player_sprite_sheet.png))
+(fn -player-sprite-sheet []
+  (love.graphics.newImage :assets/player_sprite_sheet.png))
 
-(local -player-sprite-quads
-       {:down [(love.graphics.newQuad 0 0 16 16
-                                      (-player-sprite-sheet:getDimensions))
-               (love.graphics.newQuad 0 30 16 16
-                                      (-player-sprite-sheet:getDimensions))]
-        :left [(love.graphics.newQuad 30 0 16 16
-                                      (-player-sprite-sheet:getDimensions))
-               (love.graphics.newQuad 30 30 16 16
-                                      (-player-sprite-sheet:getDimensions))]
-        :up [(love.graphics.newQuad 60 0 16 16
-                                    (-player-sprite-sheet:getDimensions))
-             (love.graphics.newQuad 60 30 16 16
-                                    (-player-sprite-sheet:getDimensions))]
-        :right [(love.graphics.newQuad 90 30 16 16
-                                       (-player-sprite-sheet:getDimensions))
-                (love.graphics.newQuad 90 0 16 16
-                                       (-player-sprite-sheet:getDimensions))]})
+(fn -player-sprite-quads [player-sprite-sheet]
+  {:down [(love.graphics.newQuad 0 0 16 16 (player-sprite-sheet:getDimensions))
+          (love.graphics.newQuad 0 30 16 16 (player-sprite-sheet:getDimensions))]
+   :left [(love.graphics.newQuad 30 0 16 16 (player-sprite-sheet:getDimensions))
+          (love.graphics.newQuad 30 30 16 16
+                                 (player-sprite-sheet:getDimensions))]
+   :up [(love.graphics.newQuad 60 0 16 16 (player-sprite-sheet:getDimensions))
+        (love.graphics.newQuad 60 30 16 16 (player-sprite-sheet:getDimensions))]
+   :right [(love.graphics.newQuad 90 30 16 16
+                                  (player-sprite-sheet:getDimensions))
+           (love.graphics.newQuad 90 0 16 16
+                                  (player-sprite-sheet:getDimensions))]})
 
-(fn -init-player-state []
+(fn -init-player-state [player-sprite-quads]
   {:x 0
    :y 0
    :moving false
@@ -27,10 +22,8 @@
    :direction-delta 0
    :delta-per-frame 8
    :speed 2
-   :sprite-quad (-> (. -player-sprite-quads :down)
+   :sprite-quad (-> (. player-sprite-quads :down)
                     (. 1))})
-
-(local -player-state (-init-player-state))
 
 (fn choose-sprite-quad [sprite-quads delta delta-per-frame]
   (let [cur-frame (+ 1 (math.floor (/ delta delta-per-frame)))]
@@ -96,7 +89,7 @@
 
 {:player-sprite-sheet -player-sprite-sheet
  :player-sprite-quads -player-sprite-quads
- :player-state -player-state
+ :init-player-state -init-player-state
  : choose-sprite-quad
  : run-player-state
  : handle-player-movement}

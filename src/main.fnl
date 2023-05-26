@@ -5,17 +5,21 @@
 
 (local -keyboard {:up false :down false :left false :right false})
 
+(local player-sprite-sheet (player.player-sprite-sheet))
+(local player-sprite-quads (player.player-sprite-quads player-sprite-sheet))
+(local player-state (player.init-player-state player-sprite-quads))
+
 (fn love.update [dt]
   (let [speed-delta (/ dt 0.0166)]
-    (player.run-player-state (* (. player.player-state :speed) speed-delta)
-                             player.player-state player.player-sprite-quads
-                             -keyboard world.tiles)))
+    (player.run-player-state (* (. player-state :speed) speed-delta)
+                             player-state player-sprite-quads -keyboard
+                             world.tiles)))
 
 (fn love.keypressed [key]
   (do
     (when (= :escape key) (love.event.quit))
     (tset -keyboard key true)
-    (player.handle-player-movement player.player-state key)))
+    (player.handle-player-movement player-state key)))
 
 (fn love.keyreleased [key]
   (tset -keyboard key false)
@@ -30,13 +34,12 @@
           (or (when (. -keyboard :left) (player.handle-player-movement :left)))
           (or (when (. -keyboard :right) (player.handle-player-movement :right))))
       (do
-        (tset player.player-state :moving false)
-        (tset player.player-state :direction-delta 0))))
+        (tset player-state :moving false)
+        (tset player-state :direction-delta 0))))
 
 (fn love.draw []
   (each [_ tile (pairs world.tiles)]
     (love.graphics.draw world.overworld-sprite-sheet (. tile :quad) (. tile :x)
                         (. tile :y) 0 1))
-  (love.graphics.draw player.player-sprite-sheet
-                      (. player.player-state :sprite-quad)
-                      (. player.player-state :x) (. player.player-state :y) 0 1))
+  (love.graphics.draw player-sprite-sheet (. player-state :sprite-quad)
+                      (. player-state :x) (. player-state :y) 0 1))

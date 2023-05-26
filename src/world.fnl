@@ -1,4 +1,4 @@
-(local json (require :src.util.json))
+(local json (require :lib.json))
 
 ;; (local area_x50_y50 (require :src.map.area_50_50))
 (local overworld-sprite-sheet

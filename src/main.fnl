@@ -1,7 +1,7 @@
 (global (GAME-WIDTH GAME-HEIGHT) (love.window.getMode))
 
-(local player (require :src.player))
-(local world (require :src.world))
+(local player (require :player))
+(local world (require :world))
 
 (local -keyboard {:up false :down false :left false :right false})
 

@@ -20,7 +20,7 @@ make build
 Where `<LoveBin>` is the path to your LÖVE binary, e.g. `/Applications/love.app/Contents/MacOS/love`
 
 ```
-<LoveBin> .
+<LoveBin> src
 ```
 
 To do a build a run in one step you may do something like:

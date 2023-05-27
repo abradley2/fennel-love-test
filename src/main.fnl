@@ -1,4 +1,10 @@
+
+(love.window.setMode 650 650 {:resizable false})
+
 (global (GAME-WIDTH GAME-HEIGHT) (love.window.getMode))
+
+
+(print GAME-WIDTH GAME-HEIGHT)
 
 (local player (require :player))
 (local world (require :world))

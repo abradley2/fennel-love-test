@@ -1,5 +1,5 @@
 (fn -player-sprite-sheet []
-  (love.graphics.newImage :assets/player_sprite_sheet.png))
+  (love.graphics.newImage :assets/sprites/player_sprite_sheet.png))
 
 (fn -player-sprite-quads [player-sprite-sheet]
   {:down [(love.graphics.newQuad 0 0 16 16 (player-sprite-sheet:getDimensions))

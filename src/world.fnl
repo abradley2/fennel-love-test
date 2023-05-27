@@ -1,7 +1,7 @@
 (local json (require :lib.json))
 
 (local overworld-sprite-sheet
-       (love.graphics.newImage :assets/overworld_sprite_sheet.png))
+       (love.graphics.newImage :assets/world_tiles.png))
 
 (fn read-map [map-file]
   (let [map-fh (io.open (.. :./src/map/ map-file))
@@ -16,12 +16,12 @@
      :tile-height (. map-json :tileheight)
      :tile-width (. map-json :tilewidth)}))
 
-(local area_x50_y50 (read-map :area_50_50.tmj))
+(local area_x50_y50 (read-map :area_50_50.json))
 
 ; TODO: read all these directly from the tiled file
 
 (local sprite-sheet-column-count 9)
-(local column-count 16)
+(local column-count 32)
 (local tile-width 16)
 (local tile-height 16)
 (local tileset-margin 1)

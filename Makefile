@@ -1,15 +1,18 @@
 build: .local/fennel
 	.local/fennel --compile src/world.fnl > src/world.lua
 	.local/fennel --compile src/player.fnl > src/player.lua
+	.local/fennel --compile src/player_spec.fnl > src/player_spec.lua
 	.local/fennel --compile src/main.fnl > src/main.lua
+	.local/busted/bin/busted src
 
 lint: .local/fnlfmt
 	.local/fnlfmt/bin/fnlfmt --fix src/world.fnl
 	.local/fnlfmt/bin/fnlfmt --fix src/player.fnl
+	.local/fnlfmt/bin/fnlfmt --fix src/player_spec.fnl
 	.local/fnlfmt/bin/fnlfmt --fix src/main.fnl
 
 test: .local/ .local/busted/
-	.local/busted/bin/busted
+	.local/busted/bin/busted src
 
 clean:
 	rm -rf .local/

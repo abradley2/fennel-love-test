@@ -1,7 +1,53 @@
 (local json (require :lib.json))
 
-(local overworld-sprite-sheet
-       (love.graphics.newImage :assets/world_tiles.png))
+;; (local overworld-sprite-sheet (love.graphics.newImage :assets/world_tiles.png))
+
+(fn get-quad-table [first-gid tileset-data quad-table? current-tile-idx?]
+  (let [quad-table (or quad-table? {})
+        current-tile-idx (or current-tile-idx? 1)
+        tilecount (. tileset-data :tilecount)
+        columns (. tileset-data :columns)
+        spacing (. tileset-data :spacing)
+        margin (. tileset-data :margin)
+        tileheight (. tileset-data :tileheight)
+        tilewidth (. tileset-data :tilewidth)]
+    (print current-tile-idx tilecount)
+    (if (> current-tile-idx tilecount)
+        quad-table
+        (do
+          (let [sprite-row-zidx (math.floor (/ (- current-tile-idx 1) columns))
+                sprite-col-zidx (math.fmod (- current-tile-idx 1) columns)]
+            (tset quad-table (+ first-gid (- current-tile-idx 1))
+                  {:width tilewidth
+                   :height tileheight
+                   :x-offset (+ margin
+                                (+ (* spacing sprite-col-zidx)
+                                   (* tilewidth sprite-col-zidx)))
+                   :y-offset (+ margin
+                                (+ (* spacing sprite-row-zidx)
+                                   (* tileheight sprite-row-zidx)))})
+            quad-table)
+          (get-quad-table first-gid tileset-data quad-table
+                          (+ 1 current-tile-idx))))))
+
+(fn read-tiled-map [map-file]
+  (let [map-fh (io.open (.. :./src/map/ map-file))
+        map-json (map-fh:read :*all)
+        map-data (json.decode map-json)
+        tile-height (. map-data :tileheight)
+        tile-width (. map-data :tilewidth)
+        width (. map-data :width)
+        height (. map-data :height)
+        layers (. map-data :layers)
+        tilesets (. map-data :tilesets)]
+    (map-fh:close)
+    (collect [_k tileset-metadata (ipairs tilesets)]
+      (let [source (. tileset-metadata :source)
+            first-gid (. tileset-metadata :firstgid)
+            tileset-fh (io.open (.. :./src/map/ source))
+            tileset-json (tileset-fh:read :*all)
+            tileset-data (json.decode tileset-json)]
+        (values source (get-quad-table first-gid tileset-data))))))
 
 (fn read-map [map-file]
   (let [map-fh (io.open (.. :./src/map/ map-file))
@@ -58,6 +104,9 @@
                                     : y})
           (to-tiles tiles (+ tile-idx 1) all-tiles)))))
 
-(local tiles (to-tiles (. area_x50_y50 :sprite-layer)))
+;; (local tiles (to-tiles (. area_x50_y50 :sprite-layer)))
 
-{: tiles : overworld-sprite-sheet}
+;; {: tiles : overworld-sprite-sheet}
+{: read-tiled-map}
+
+;(do (local world (require :src.world)) (world.read-tiled-map :area_50_50.json))

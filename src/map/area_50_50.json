@@ -124,7 +124,7 @@
          "height":32,
          "id":3,
          "name":"logic",
-         "opacity":1,
+         "opacity":0.5,
          "type":"tilelayer",
          "visible":false,
          "width":32,

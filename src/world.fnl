@@ -16,16 +16,16 @@
         quad-id (.. (. quad :image) "__" (. quad :original-tile-id))]
     (tset quads quad-id
           (love.graphics.newQuad (. quad :x-offset) (. quad :y-offset)
-                                 (-get-image (.. :./src/assets/ (. quad :image)))))
+                                 (. quad :width) (. quad :height)
+                                 (-get-image (.. :assets/ (. quad :image)))))
     (. quads quad-id)))
 
 (fn -create-sprite-batches [render-tiles]
   (accumulate [batch-table {} _ render-tile (pairs render-tiles)]
     (if (= false (. render-tile :visible))
         batch-table
-        (let [_ (print (. render-tile :visible))
-              image-name (-> (. render-tile :quad) (. :image))
-              image (-get-image (.. :./src/assets/ image-name))
+        (let [image-name (-> (. render-tile :quad) (. :image))
+              image (-get-image (.. :assets/ image-name))
               sprite-batch (or (. batch-table image-name)
                                (let [new-batch (love.graphics.newSpriteBatch image
                                                                              576)]
@@ -71,7 +71,8 @@
       joined)))
 
 (fn create-layers [quads layers]
-  (icollect [_k layer (ipairs layers)]
+  (collect [_k layer (ipairs layers)]
+    (. layer :name)
     (icollect [idx tile-id (ipairs (. layer :data))]
       (let [columns (. layer :width)
             row-zidx (math.floor (/ (- idx 1) columns))
@@ -107,4 +108,5 @@
         (create-layers layers))))
 
 {: read-tiled-map :create-sprite-batches -create-sprite-batches}
+
 ; (do (local world (require :src.world)) (world.read-tiled-map "area_50_50.json"))

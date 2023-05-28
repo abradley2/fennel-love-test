@@ -40,9 +40,11 @@
         (tset player-state :direction-delta 0))))
 
 (local area (-> (world.read-tiled-map :area_50_50.json)
-
+                (. :world)
                 world.create-sprite-batches))
 
 (fn love.draw []
+  (each [_k sprite-batch (pairs area)]
+    (love.graphics.draw sprite-batch))
   (love.graphics.draw player-sprite-sheet (. player-state :sprite-quad)
                       (. player-state :x) (. player-state :y) 0 1))

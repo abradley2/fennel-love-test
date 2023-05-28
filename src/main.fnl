@@ -1,8 +1,6 @@
-(love.window.setMode 650 650 {:resizable false})
+(love.window.setMode 640 640 {:resizable false})
 
 (global (GAME-WIDTH GAME-HEIGHT) (love.window.getMode))
-
-(print GAME-WIDTH GAME-HEIGHT)
 
 (local player (require :player))
 (local world (require :world))
@@ -12,6 +10,15 @@
 (local player-sprite-sheet (player.player-sprite-sheet))
 (local player-sprite-quads (player.player-sprite-quads player-sprite-sheet))
 (local player-state (player.init-player-state player-sprite-quads))
+
+(local images {})
+
+(fn load-image [image-name]
+  (tset images image-name (love.graphics.newImage :assets/world_tiles.png))
+  (. images image-name))
+
+(fn get-image [image-name]
+  (or (. images image-name) (load-image image-name)))
 
 (fn love.update [dt]
   (let [speed-delta (/ dt 0.0166)]

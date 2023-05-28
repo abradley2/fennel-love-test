@@ -11,15 +11,6 @@
 (local player-sprite-quads (player.player-sprite-quads player-sprite-sheet))
 (local player-state (player.init-player-state player-sprite-quads))
 
-(local images {})
-
-(fn load-image [image-name]
-  (tset images image-name (love.graphics.newImage :assets/world_tiles.png))
-  (. images image-name))
-
-(fn get-image [image-name]
-  (or (. images image-name) (load-image image-name)))
-
 (fn love.update [dt]
   (let [speed-delta (/ dt 0.0166)]
     (player.run-player-state (* (. player-state :speed) speed-delta)
@@ -48,9 +39,10 @@
         (tset player-state :moving false)
         (tset player-state :direction-delta 0))))
 
+(local area (-> (world.read-tiled-map :area_50_50.json)
+
+                world.create-sprite-batches))
+
 (fn love.draw []
-  (each [_ tile (pairs world.tiles)]
-    (love.graphics.draw world.overworld-sprite-sheet (. tile :quad) (. tile :x)
-                        (. tile :y) 0 1))
   (love.graphics.draw player-sprite-sheet (. player-state :sprite-quad)
                       (. player-state :x) (. player-state :y) 0 1))

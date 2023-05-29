@@ -58,7 +58,7 @@
                        nil
                        false
                        _
-                       (check-collision (+ 6 next-x) (+ 10 next-y) 4 5 (. world-tile :x)
+                       (check-collision (+ 4 next-x) (+ 10 next-y) 8 5 (. world-tile :x)
                                         (. world-tile :y) 16 16))]
     (if does-collide
         nil

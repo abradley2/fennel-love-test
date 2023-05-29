@@ -31,8 +31,8 @@
                                                                              576)]
                                  (tset batch-table image-name new-batch)
                                  new-batch))]
-          (sprite-batch:add (-load-quad render-tile) (. render-tile :x)
-                            (. render-tile :y) 0 CAMERA-ZOOM)
+          (sprite-batch:add (-load-quad render-tile) (. render-tile :display-x)
+                            (. render-tile :display-y) 0 CAMERA-ZOOM)
           batch-table))))
 
 (fn get-quad-table [first-gid tileset-data quad-table? current-tile-idx?]
@@ -82,8 +82,10 @@
             nil
             {: quad
              : tile-id
-             :x (* col-zidx (-> (. quad :width) (* CAMERA-ZOOM)))
-             :y (* row-zidx (-> (. quad :height) (* CAMERA-ZOOM)))
+             :x (* col-zidx (. quad :width))
+             :y (* row-zidx (. quad :height))
+             :display-x (* col-zidx (-> (. quad :width) (* CAMERA-ZOOM)))
+             :display-y (* row-zidx (-> (. quad :height) (* CAMERA-ZOOM)))
              :visible (. layer :visible)})))))
 
 (fn read-tiled-map [map-file]

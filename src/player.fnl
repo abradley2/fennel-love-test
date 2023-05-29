@@ -63,7 +63,7 @@
       nil)
   player-state)
 
-(fn handle-player-movement [player-state key]
+(fn on-key-pressed [player-state key]
   (case key
     :up
     (do
@@ -87,9 +87,25 @@
       (tset player-state :direction-delta 0)))
   player-state)
 
+(fn on-key-released [player-state keyboard key]
+  (if (-> false
+          (or (= true (. keyboard :up)))
+          (or (= true (. keyboard :down)))
+          (or (= true (. keyboard :left)))
+          (or (= true (. keyboard :right))))
+      (-> false
+          (or (when (. keyboard :up) (on-key-pressed :up)))
+          (or (when (. keyboard :down) (on-key-pressed :down)))
+          (or (when (. keyboard :left) (on-key-pressed :left)))
+          (or (when (. keyboard :right) (on-key-pressed :right))))
+      (do
+        (tset player-state :moving false)
+        (tset player-state :direction-delta 0))))
+
 {:player-sprite-sheet -player-sprite-sheet
  :player-sprite-quads -player-sprite-quads
  :init-player-state -init-player-state
  : choose-sprite-quad
  : run-player-state
- : handle-player-movement}
+ : on-key-pressed
+ : on-key-released}

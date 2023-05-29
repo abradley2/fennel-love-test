@@ -28,23 +28,11 @@
   (do
     (when (= :escape key) (love.event.quit))
     (tset -keyboard key true)
-    (player.handle-player-movement player-state key)))
+    (player.on-key-pressed player-state key)))
 
 (fn love.keyreleased [key]
   (tset -keyboard key false)
-  (if (-> false
-          (or (= true (. -keyboard :up)))
-          (or (= true (. -keyboard :down)))
-          (or (= true (. -keyboard :left)))
-          (or (= true (. -keyboard :right))))
-      (-> false
-          (or (when (. -keyboard :up) (player.handle-player-movement :up)))
-          (or (when (. -keyboard :down) (player.handle-player-movement :down)))
-          (or (when (. -keyboard :left) (player.handle-player-movement :left)))
-          (or (when (. -keyboard :right) (player.handle-player-movement :right))))
-      (do
-        (tset player-state :moving false)
-        (tset player-state :direction-delta 0))))
+  (player.on-key-released player-state -keyboard key))
 
 (local area (-> (world.read-tiled-map :area_50_50.json)
                 (. :world)
@@ -54,4 +42,5 @@
   (each [_k sprite-batch (pairs area)]
     (love.graphics.draw sprite-batch))
   (love.graphics.draw player-sprite-sheet (. player-state :sprite-quad)
-                      (-> (. player-state :x) (* CAMERA-ZOOM)) (-> (. player-state :y) (* CAMERA-ZOOM)) 0 CAMERA-ZOOM))
+                      (-> (. player-state :x) (* CAMERA-ZOOM))
+                      (-> (. player-state :y) (* CAMERA-ZOOM)) 0 CAMERA-ZOOM))

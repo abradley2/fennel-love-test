@@ -110,5 +110,3 @@
         (create-layers layers))))
 
 {: read-tiled-map :create-sprite-batches -create-sprite-batches}
-
-; (do (local world (require :src.world)) (world.read-tiled-map "area_50_50.json"))

@@ -1,6 +1,6 @@
 ; (love.window.setMode 512 512 {:resizable false})
-; (love.window.setMode 768 768 {:resizable false})
-(love.window.setMode 1024 1024 {:resizable false})
+(love.window.setMode 768 768 {:resizable false})
+; (love.window.setMode 1024 1024 {:resizable false})
 
 (love.graphics.setDefaultFilter :nearest)
 

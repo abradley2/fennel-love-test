@@ -58,8 +58,9 @@
                        nil
                        false
                        _
-                       (check-collision (+ 4 next-x) (+ 10 next-y) 8 5 (. world-tile :x)
-                                        (. world-tile :y) 16 16))]
+                       (check-collision (+ 4 next-x) (+ 10 next-y) 8 5
+                                        (. world-tile :x) (. world-tile :y) 16
+                                        16))]
     (if does-collide
         nil
         (if (= world-tile nil)
@@ -93,8 +94,7 @@
                 :right
                 [(+ (. player-state :x) speed) (. player-state :y)])
               (handle-collisions player-state area)))
-        nil))
-  player-state)
+        nil)))
 
 (fn on-key-pressed [player-state key]
   (case key

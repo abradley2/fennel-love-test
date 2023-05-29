@@ -15,12 +15,12 @@
                                   (player-sprite-sheet:getDimensions))]})
 
 (fn -init-player-state [player-sprite-quads]
-  {:x 0
-   :y 0
+  {:x 16
+   :y 16
    :moving false
    :direction :down
    :direction-delta 0
-   :delta-per-frame 8
+   :delta-per-frame 16
    :speed 2
    :sprite-quad (-> (. player-sprite-quads :down)
                     (. 1))})

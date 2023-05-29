@@ -1,4 +1,4 @@
-build: .local/fennel
+build: .local/fennel .local/busted/
 	.local/fennel --compile src/world.fnl > src/world.lua
 	.local/fennel --compile src/player.fnl > src/player.lua
 	.local/fennel --compile src/player_spec.fnl > src/player_spec.lua

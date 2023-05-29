@@ -1,6 +1,13 @@
-(love.window.setMode 640 640 {:resizable false})
+; (love.window.setMode 512 512 {:resizable false})
+(love.window.setMode 768 768 {:resizable false})
+; (love.window.setMode 1024 1024 {:resizable false})
+
+(love.graphics.setDefaultFilter "nearest")
 
 (global (GAME-WIDTH GAME-HEIGHT) (love.window.getMode))
+(local area-grid 32)
+(local target-square (/ GAME-WIDTH area-grid))
+(global CAMERA-ZOOM (/ target-square 16))
 
 (local player (require :player))
 (local world (require :world))
@@ -47,4 +54,4 @@
   (each [_k sprite-batch (pairs area)]
     (love.graphics.draw sprite-batch))
   (love.graphics.draw player-sprite-sheet (. player-state :sprite-quad)
-                      (. player-state :x) (. player-state :y) 0 1))
+                      (. player-state :x) (. player-state :y) 0 CAMERA-ZOOM))

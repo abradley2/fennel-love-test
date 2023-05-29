@@ -8,6 +8,7 @@ by making a game with [LÖVE](https://love2d.org/)
 * [Lua 5.4.6](https://www.lua.org/ftp/)
 * [LuaRocks](https://github.com/luarocks/luarocks/wiki/Download#installing)
 * [LÖVE 11.4](https://github.com/love2d/love/releases)
+* [Tiled](https://www.mapeditor.org/)
 
 # Building
 
@@ -23,7 +24,14 @@ Where `<LoveBin>` is the path to your LÖVE binary, e.g. `/Applications/love.app
 <LoveBin> src
 ```
 
-To do a build a run in one step you may do something like:
+To do a build and run in one step you may do something like:
 ```
 make build && /Applications/love.app/Contents/MacOS/love src
 ```
+
+# Contributing
+
+
+
+
+

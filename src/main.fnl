@@ -1,5 +1,5 @@
-; (love.window.setMode 512 512 {:resizable false})
-(love.window.setMode 768 768 {:resizable false})
+(love.window.setMode 512 512 {:resizable false})
+; (love.window.setMode 768 768 {:resizable false})
 ; (love.window.setMode 1024 1024 {:resizable false})
 
 (love.graphics.setDefaultFilter :nearest)
@@ -19,10 +19,9 @@
 (local player-state (player.init-player-state player-sprite-quads))
 
 (fn love.update [dt]
-  (let [speed-delta (/ dt 0.0166)]
-    (player.run-player-state (* (. player-state :speed) speed-delta)
-                             player-state player-sprite-quads -keyboard
-                             world.tiles)))
+  (let [delta (/ dt 0.0166)]
+    (player.on-update delta player-state player-sprite-quads -keyboard
+                      world.tiles)))
 
 (fn love.keypressed [key]
   (do

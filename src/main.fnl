@@ -1,4 +1,5 @@
 (local json (require :lib.json))
+(local util (require :util))
 
 ; (love.window.setMode 512 512 {:resizable false})
 (love.window.setMode 768 768 {:resizable false})
@@ -7,9 +8,14 @@
 (love.graphics.setDefaultFilter :nearest)
 
 (global (GAME-WIDTH GAME-HEIGHT) (love.window.getMode))
+
+; These are not configurable. Do not change.
 (local area-grid 32)
+(local area-size 512)
+(local tile-size 16)
+
 (local target-square (/ GAME-WIDTH area-grid))
-(global CAMERA-ZOOM (/ target-square 16))
+(global CAMERA-ZOOM (/ target-square tile-size))
 
 (local player (require :player))
 (local player-sprite-sheet (player.player-sprite-sheet))
@@ -22,25 +28,34 @@
 
 (local area {:world nil :logic nil :enemies nil :sprite-batches nil})
 
-(local world-map-json (let [world-map-fh (io.open :./src/map/map.world)
+(local world-map-data (let [world-map-fh (io.open :./src/map/map.world)
                             world-map-json (world-map-fh:read :*all)]
                         (json.decode world-map-json)))
 
 (local game-state {:moving-area nil
-                   :current-map (-> world-map-json (. :maps) (. 1))
+                   :current-map (-> world-map-data (. :maps) (. 1))
                    :world-offset-x 0
                    :world-offset-y 0})
+
+(fn load-next-area [map-idx?]
+  (let [map-idx (or map-idx? 1)
+        map (-> world-map-data (. :maps) (. map-idx))]
+    (if (util.check-collision (. map :x) (. map :y) (. map :width)
+                              (. map :height) (. player-state :x)
+                              (. player-state :y) 1 1)
+        map
+        (load-next-area (+ map-idx 1)))))
 
 (fn check-for-area-transition []
   (let [player-x (-> (. player-state :x) (+ (. game-state :world-offset-x)))
         player-y (-> (. player-state :y) (+ (. game-state :world-offset-y)))
         map-x (-> (. game-state :current-map) (. :x))
         map-y (-> (. game-state :current-map) (. :y))]
-    (if (< (+ player-x 16) map-x) (print "MOVE AREA LEFT")
-        (> player-x (+ map-x 512)) (print "MOVE AREA RIGHT")
-        (< (+ player-y 16) map-y) (print "MOVE AREA UP")
-        (> player-y (+ map-y 512)) (print "MOVE AREA DOWN")
-        (print "NO TRANSITION"))))
+    (if (< (+ player-x 16) map-x) (load-next-area)
+        (> player-x (+ map-x area-size)) (load-next-area)
+        (< (+ player-y 16) map-y) (load-next-area)
+        (> player-y (+ map-y area-size)) (load-next-area)
+        nil)))
 
 (fn set-area [area-name]
   (let [tiled-map (world.read-tiled-map (.. area-name :.json))]
@@ -58,8 +73,8 @@
   (let [delta (/ dt 0.0166)]
     (set tick (+ tick dt))
     (if (> tick 0.25) (do
-                     (check-for-area-transition)
-                     (set tick 0)) nil)
+                        (check-for-area-transition)
+                        (set tick 0)) nil)
     (player.on-update delta player-state player-sprite-quads -keyboard area)))
 
 (fn love.keypressed [key]

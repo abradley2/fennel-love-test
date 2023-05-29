@@ -1,3 +1,5 @@
+(local util (require :util))
+
 (fn -player-sprite-sheet []
   (love.graphics.newImage :assets/sprites/player_sprite_sheet.png))
 
@@ -31,12 +33,6 @@
         [(. sprite-quads cur-frame) delta]
         (choose-sprite-quad sprite-quads 0 delta-per-frame))))
 
-(fn check-collision [x1 y1 w1 h1 x2 y2 w2 h2]
-  (if (or (<= (+ x1 w1) x2) (<= (+ x2 w2) x1) (<= (+ y1 h1) y2)
-          (<= (+ y2 h2) y1))
-      false
-      true))
-
 (fn handle-collisions [[next-x next-y] player-state area tile-idx?]
   (let [direction (. player-state :direction)
         world (. area :world)
@@ -58,9 +54,9 @@
                        nil
                        false
                        _
-                       (check-collision (+ 4 next-x) (+ 10 next-y) 8 5
-                                        (. world-tile :x) (. world-tile :y) 16
-                                        16))]
+                       (util.check-collision (+ 4 next-x) (+ 10 next-y) 8 5
+                                             (. world-tile :x) (. world-tile :y)
+                                             16 16))]
     (if does-collide
         nil
         (if (= world-tile nil)

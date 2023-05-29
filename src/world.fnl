@@ -82,6 +82,7 @@
             nil
             {: quad
              : tile-id
+             :original-tile-id (. quad :original-tile-id)
              :x (* col-zidx (. quad :width))
              :y (* row-zidx (. quad :height))
              :display-x (* col-zidx (-> (. quad :width) (* CAMERA-ZOOM)))

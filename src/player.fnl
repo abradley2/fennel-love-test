@@ -21,7 +21,7 @@
    :direction :down
    :direction-delta 0
    :delta-per-frame 16
-   :speed 2
+   :speed 1.5
    :sprite-quad (-> (. player-sprite-quads :down)
                     (. 1))})
 
@@ -31,12 +31,44 @@
         [(. sprite-quads cur-frame) delta]
         (choose-sprite-quad sprite-quads 0 delta-per-frame))))
 
-(fn handle-collisions [[next-x next-y] player-state tiles]
-  (let [direction (. player-state :direction)]
-    (tset player-state :x next-x)
-    (tset player-state :y next-y)))
+(fn check-collision [x1 y1 w1 h1 x2 y2 w2 h2]
+  (if (or (<= (+ x1 w1) x2) (<= (+ x2 w2) x1) (<= (+ y1 h1) y2)
+          (<= (+ y2 h2) y1))
+      false
+      true))
 
-(fn on-update [delta player-state player-sprite-quads keyboard tiles]
+(fn handle-collisions [[next-x next-y] player-state area tile-idx?]
+  (let [direction (. player-state :direction)
+        world (. area :world)
+        tile-idx (or tile-idx? 1)
+        world-tile (. world tile-idx)
+        does-collide (case (-?> world-tile (. :original-tile-id))
+                       1
+                       false
+                       8
+                       false
+                       9
+                       false
+                       10
+                       false
+                       17
+                       false
+                       18
+                       false
+                       nil
+                       false
+                       _
+                       (check-collision (+ 6 next-x) (+ 10 next-y) 4 5 (. world-tile :x)
+                                        (. world-tile :y) 16 16))]
+    (if does-collide
+        nil
+        (if (= world-tile nil)
+            (do
+              (tset player-state :x next-x)
+              (tset player-state :y next-y))
+            (handle-collisions [next-x next-y] player-state area (+ tile-idx 1))))))
+
+(fn on-update [delta player-state player-sprite-quads keyboard area]
   (let [speed (* (. player-state :speed) delta)
         [sprite-quad next-delta] (choose-sprite-quad (->> (. player-state
                                                              :direction)
@@ -60,7 +92,7 @@
                 [(- (. player-state :x) speed) (. player-state :y)]
                 :right
                 [(+ (. player-state :x) speed) (. player-state :y)])
-              (handle-collisions player-state tiles)))
+              (handle-collisions player-state area)))
         nil))
   player-state)
 

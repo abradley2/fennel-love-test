@@ -17,8 +17,8 @@
                                   (player-sprite-sheet:getDimensions))]})
 
 (fn -init-player-state [player-sprite-quads]
-  {:x 16
-   :y 16
+  {:x 256
+   :y 256
    :moving false
    :direction :down
    :direction-delta 0

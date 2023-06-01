@@ -26,7 +26,7 @@ Where `<LoveBin>` is the path to your LÖVE binary, e.g. `/Applications/love.app
 
 To do a build and run in one step you may do something like:
 ```
-make build && /Applications/love.app/Contents/MacOS/love src
+make build && love src
 ```
 
 

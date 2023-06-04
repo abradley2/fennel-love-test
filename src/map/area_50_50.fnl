@@ -2,11 +2,11 @@
 
 (var system nil)
 
-(fn init []
-  (set system (ecs.processingSystem))
+(fn init [world]
+  (set system [(ecs.processingSystem) (ecs.processingSystem)])
   system)
 
-(fn deinit []
+(fn deinit [world]
   nil)
 
 {: init : deinit}

@@ -34,7 +34,7 @@
              :logic nil
              :enemies nil
              :sprite-batches nil
-             :system nil})
+             :area-systems nil})
 
 (local world-map-data (let [world-map-fh (io.open :./src/map/map.world)
                             world-map-json (world-map-fh:read :*all)]
@@ -62,9 +62,7 @@
 (fn set-area [area-name] ; clean up world
   (if (not (= nil (. area :world)))
       (do
-        (if (not (= nil (. area :system)))
-            (ecs.removeSystem ecs-world (. area :system))
-            nil)
+        (-?> (. area :area-systems) (. :deinit) (#($1 ecs-world)))
         (each [_ logic-tile (pairs (. area :logic))]
           (tset logic-tile :type :logic-tile)
           (ecs.removeEntity ecs-world logic-tile))
@@ -73,17 +71,18 @@
           (ecs.addEntity ecs-world world-tile)))
       nil)
   (let [tiled-map (world.read-tiled-map area-name)
-        system (-?> (. map-logic area-name) (: :init))] ; add to world
+        system (. map-logic area-name)] ; add to world
     (each [_ logic-tile (pairs (. tiled-map :logic))]
       (ecs.addEntity ecs-world logic-tile))
     (each [_ world-tile (pairs (. tiled-map :world))]
       (ecs.addEntity ecs-world world-tile))
+    (-?> system (. :init) (#($1 ecs-world)))
     (tset area :world (. tiled-map :world))
     (tset area :logic (. tiled-map :logic))
     (tset area :enemies (. tiled-map :enemies))
     (tset area :sprite-batches
           (-> (. tiled-map :world) world.create-sprite-batches))
-    (tset area :system system)
+    (tset area :area-systems system)
     (if (not (= nil system)) (ecs.addSystem ecs-world system) nil)
     area))
 

@@ -1,4 +1,5 @@
 (local json (require :lib.json))
+(local ecs (require :lib.ecs))
 (local util (require :util))
 
 ; (love.window.setMode 512 512 {:resizable false})
@@ -8,7 +9,6 @@
 (love.graphics.setDefaultFilter :nearest)
 
 (global (GAME-WIDTH GAME-HEIGHT) (love.window.getMode))
-
 
 ; These are not configurable. Do not change.
 (local area-grid 32)
@@ -40,8 +40,33 @@
                    :world-offset-x 0
                    :world-offset-y 0})
 
-(fn set-area [area-name]
-  (let [tiled-map (world.read-tiled-map area-name)]
+(local attack-system (ecs.processingSystem))
+
+(tset attack-system :process (fn [_ entity delta]
+                               nil))
+
+(tset attack-system :filter (ecs.requireAll :attack-direction :attack-target))
+
+(local ecs-world (ecs.world attack-system))
+
+(ecs.addEntity ecs-world {:attack-direction :up :attack-target :enemy})
+(ecs.addEntity ecs-world player-state)
+
+(fn set-area [area-name] ; clean up world
+  (if (not (= nil (. area :world)))
+      (do
+        (each [_ logic-tile (pairs (. area :logic))]
+          (tset logic-tile :type :logic-tile)
+          (ecs.removeEntity ecs-world logic-tile))
+        (each [_ world-tile (pairs (. area :world))]
+          (tset world-tile :type :world-tile)
+          (ecs.addEntity ecs-world world-tile)))
+      nil)
+  (let [tiled-map (world.read-tiled-map area-name)] ; add to world
+    (each [_ logic-tile (pairs (. tiled-map :logic))]
+      (ecs.addEntity ecs-world logic-tile))
+    (each [_ world-tile (pairs (. tiled-map :world))]
+      (ecs.addEntity ecs-world world-tile))
     (tset area :world (. tiled-map :world))
     (tset area :logic (. tiled-map :logic))
     (tset area :enemies (. tiled-map :enemies))
@@ -94,6 +119,7 @@
 (var area-transition-tick 0)
 
 (fn love.update [dt]
+  (ecs-world.update ecs-world)
   (if (= nil (. game-state :leaving-area))
       (let [delta (/ dt 0.0166)]
         (set area-transition-tick (+ area-transition-tick dt))
@@ -107,7 +133,6 @@
       (let [delta (/ dt 0.0166)
             animate-speed (* 8 delta)
             player-transition-mod (/ (+ area-size tile-size) area-size)
-
             player-animate-speed (* animate-speed player-transition-mod)
             [direction animation-offset player-animation-offset] (. game-state
                                                                     :animate-transition)
@@ -120,13 +145,17 @@
             (do
               (tset game-state :animate-transition [direction next-offset])
               (if (= :left direction)
-                  (tset player-state :x (+ (. player-state :x) player-animate-speed))
+                  (tset player-state :x
+                        (+ (. player-state :x) player-animate-speed))
                   (= :right direction)
-                  (tset player-state :x (- (. player-state :x) player-animate-speed))
+                  (tset player-state :x
+                        (- (. player-state :x) player-animate-speed))
                   (= :up direction)
-                  (tset player-state :y (+ (. player-state :y) player-animate-speed))
+                  (tset player-state :y
+                        (+ (. player-state :y) player-animate-speed))
                   (= :down direction)
-                  (tset player-state :y (- (. player-state :y) player-animate-speed))))))))
+                  (tset player-state :y
+                        (- (. player-state :y) player-animate-speed))))))))
 
 (fn love.keypressed [key]
   (do

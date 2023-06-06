@@ -32,8 +32,9 @@
 
 (local area {:world nil
              :logic nil
-             :enemies nil
+             :entities nil
              :sprite-batches nil
+             :entity-sprites nilaaaaaaaaaaaa
              :area-systems nil})
 
 (local world-map-data (let [world-map-fh (io.open :./src/map/map.world)
@@ -79,12 +80,11 @@
     (-?> system (. :init) (#($1 ecs-world)))
     (tset area :world (. tiled-map :world))
     (tset area :logic (. tiled-map :logic))
-    (tset area :enemies (. tiled-map :enemies))
+    (tset area :entities (. tiled-map :entities))
     (tset area :sprite-batches
           (-> (. tiled-map :world) world.create-sprite-batches))
-    (tset area :area-systems system)
-    (if (not (= nil system)) (ecs.addSystem ecs-world system) nil)
-    area))
+    (tset area :area-systems system))
+  area)
 
 (set-area :area_50_50.json)
 
@@ -131,7 +131,7 @@
 (var area-transition-tick 0)
 
 (fn love.update [dt]
-  (ecs-world.update ecs-world)
+  (ecs-world.update ecs-world dt)
   (if (= nil (. game-state :leaving-area))
       (let [delta (/ dt 0.0166)]
         (set area-transition-tick (+ area-transition-tick dt))

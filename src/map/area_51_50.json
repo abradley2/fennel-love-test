@@ -123,7 +123,7 @@
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
          "height":32,
          "id":3,
-         "name":"enemy",
+         "name":"entity",
          "opacity":1,
          "type":"tilelayer",
          "visible":true,
@@ -141,6 +141,10 @@
         {
          "firstgid":1,
          "source":"..\/assets\/world_tiles.json"
+        }, 
+        {
+         "firstgid":46,
+         "source":"..\/assets\/logic_tiles.json"
         }],
  "tilewidth":16,
  "type":"map",

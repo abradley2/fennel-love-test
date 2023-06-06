@@ -8,8 +8,8 @@
                      :right [default-quad]
                      :down [default-quad]
                      :left [default-quad]}
-              init-player (player.init-player-state quads)]
-          (assert.are.same (. init-player :sprite-quad) default-quad)))))
+              init-player (player.init-player-state {} quads)]
+          (assert.are.same (-> init-player (. :draw) (. 2)) default-quad)))))
 
 (describe :player.fnl
           (fn []

@@ -24,7 +24,8 @@
 (local player (require :player))
 (local player-sprite-sheet (player.player-sprite-sheet))
 (local player-sprite-quads (player.player-sprite-quads player-sprite-sheet))
-(local player-state (player.init-player-state player-sprite-quads))
+(local player-state
+       (player.init-player-state player-sprite-sheet player-sprite-quads))
 
 (local world (require :world))
 
@@ -34,7 +35,7 @@
              :logic nil
              :entities nil
              :sprite-batches nil
-             :entity-sprites nilaaaaaaaaaaaa
+             :entity-sprites nil
              :area-systems nil})
 
 (local world-map-data (let [world-map-fh (io.open :./src/map/map.world)
@@ -48,16 +49,23 @@
                    :world-offset-x 0
                    :world-offset-y 0})
 
-(local attack-system (ecs.processingSystem))
+(local draw-system (ecs.processingSystem))
 
-(tset attack-system :process (fn [_ entity delta]
-                               nil))
+(tset draw-system :process (fn [_ entity [draw _]]
+                             (if draw
+                                 (let [[sprite quad] (. entity :draw)]
+                                   (love.graphics.draw sprite quad
+                                                       (-> (. entity :x)
+                                                           (* CAMERA-ZOOM))
+                                                       (-> (. entity :y)
+                                                           (* CAMERA-ZOOM))
+                                                       0 CAMERA-ZOOM))
+                                 nil)))
 
-(tset attack-system :filter (ecs.requireAll :attack-direction :attack-target))
+(tset draw-system :filter (ecs.requireAll :draw))
 
-(local ecs-world (ecs.world attack-system))
+(local ecs-world (ecs.world draw-system))
 
-(ecs.addEntity ecs-world {:attack-direction :up :attack-target :enemy})
 (ecs.addEntity ecs-world player-state)
 
 (fn set-area [area-name] ; clean up world
@@ -131,7 +139,7 @@
 (var area-transition-tick 0)
 
 (fn love.update [dt]
-  (ecs-world.update ecs-world dt)
+  (ecs-world.update ecs-world [false (/ dt 0.0166)])
   (if (= nil (. game-state :leaving-area))
       (let [delta (/ dt 0.0166)]
         (set area-transition-tick (+ area-transition-tick dt))
@@ -215,6 +223,6 @@
         (each [_k sprite-batch (pairs (-> game-state (. :entering-area)
                                           (. :sprite-batches)))]
           (love.graphics.draw sprite-batch entering-x-offset entering-y-offset))))
-  (love.graphics.draw player-sprite-sheet (. player-state :sprite-quad)
-                      (-> (. player-state :x) (* CAMERA-ZOOM))
-                      (-> (. player-state :y) (* CAMERA-ZOOM)) 0 CAMERA-ZOOM))
+  (print :FPS (love.timer.getFPS))
+  (ecs-world.update ecs-world [true nil]))
+

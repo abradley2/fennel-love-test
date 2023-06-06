@@ -16,7 +16,7 @@
            (love.graphics.newQuad 90 0 16 16
                                   (player-sprite-sheet:getDimensions))]})
 
-(fn -init-player-state [player-sprite-quads]
+(fn -init-player-state [player-sprite-sheet player-sprite-quads]
   {:player-entity true
    :x 256
    :y 256
@@ -25,8 +25,9 @@
    :direction-delta 0
    :delta-per-frame 16
    :speed 1.5
-   :sprite-quad (-> (. player-sprite-quads :down)
-                    (. 1))})
+   :draw [player-sprite-sheet
+          (-> (. player-sprite-quads :down)
+              (. 1))]})
 
 (fn choose-sprite-quad [sprite-quads delta delta-per-frame]
   (let [cur-frame (+ 1 (math.floor (/ delta delta-per-frame)))]
@@ -68,6 +69,7 @@
 
 (fn on-update [delta player-state player-sprite-quads keyboard area]
   (let [speed (* (. player-state :speed) delta)
+        [sprite-sheet _] (. player-state :draw)
         [sprite-quad next-delta] (choose-sprite-quad (->> (. player-state
                                                              :direction)
                                                           (. player-sprite-quads))
@@ -76,7 +78,7 @@
                                                      (. player-state
                                                         :delta-per-frame))]
     (tset player-state :direction-delta next-delta)
-    (tset player-state :sprite-quad sprite-quad)
+    (tset player-state :draw [sprite-sheet sprite-quad])
     (if (. player-state :moving)
         (do
           (tset player-state :direction-delta

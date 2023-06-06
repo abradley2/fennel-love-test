@@ -1,4 +1,5 @@
 build: .local/fennel .local/busted/
+	.local/fennel --compile src/systems/action_animation.fnl > src/systems/action_animation.lua
 	.local/fennel --compile src/util.fnl > src/util.lua
 	.local/fennel --compile src/world.fnl > src/world.lua
 	.local/fennel --compile src/player.fnl > src/player.lua
@@ -8,6 +9,7 @@ build: .local/fennel .local/busted/
 	.local/busted/bin/busted src
 
 lint: .local/fnlfmt
+	.local/fnlfmt/bin/fnlfmt --fix src/systems/action_animation.fnl
 	.local/fnlfmt/bin/fnlfmt --fix src/util.fnl
 	.local/fnlfmt/bin/fnlfmt --fix src/world.fnl
 	.local/fnlfmt/bin/fnlfmt --fix src/player.fnl

@@ -225,4 +225,3 @@
           (love.graphics.draw sprite-batch entering-x-offset entering-y-offset))))
   (print :FPS (love.timer.getFPS))
   (ecs-world.update ecs-world [true nil]))
-

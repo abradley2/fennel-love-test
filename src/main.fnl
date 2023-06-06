@@ -1,6 +1,7 @@
 (local json (require :lib.json))
 (local ecs (require :lib.ecs))
 (local util (require :util))
+(local action_animation (require :systems.action_animation))
 (local area_50_50 (require :map.area_50_50))
 
 (local map-logic {:area_50_50.json area_50_50})
@@ -64,7 +65,7 @@
 
 (tset draw-system :filter (ecs.requireAll :draw))
 
-(local ecs-world (ecs.world draw-system))
+(local ecs-world (ecs.world draw-system (. action_animation :system)))
 
 (ecs.addEntity ecs-world player-state)
 
@@ -85,13 +86,13 @@
       (ecs.addEntity ecs-world logic-tile))
     (each [_ world-tile (pairs (. tiled-map :world))]
       (ecs.addEntity ecs-world world-tile))
-    (-?> system (. :init) (#($1 ecs-world)))
     (tset area :world (. tiled-map :world))
     (tset area :logic (. tiled-map :logic))
     (tset area :entities (. tiled-map :entities))
     (tset area :sprite-batches
           (-> (. tiled-map :world) world.create-sprite-batches))
-    (tset area :area-systems system))
+    (tset area :area-systems system)
+    (-?> system (. :init) (#($1 ecs-world area))))
   area)
 
 (set-area :area_50_50.json)
@@ -223,5 +224,4 @@
         (each [_k sprite-batch (pairs (-> game-state (. :entering-area)
                                           (. :sprite-batches)))]
           (love.graphics.draw sprite-batch entering-x-offset entering-y-offset))))
-  (print :FPS (love.timer.getFPS))
   (ecs-world.update ecs-world [true nil]))

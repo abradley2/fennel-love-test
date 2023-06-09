@@ -86,16 +86,16 @@
   (case key
     :up
     (tset player-state :action
-          {:name :up :animating true :frame-delta 17 :frames-per-quad 16})
+          {:name :up :animating true :frame-delta 9 :frames-per-quad 8})
     :down
     (tset player-state :action
-          {:name :down :animating true :frame-delta 17 :frames-per-quad 16})
+          {:name :down :animating true :frame-delta 9 :frames-per-quad 8})
     :left
     (tset player-state :action
-          {:name :left :animating true :frame-delta 17 :frames-per-quad 16})
+          {:name :left :animating true :frame-delta 9 :frames-per-quad 8})
     :right
     (tset player-state :action
-          {:name :right :animating true :frame-delta 17 :frames-per-quad 16}))
+          {:name :right :animating true :frame-delta 9 :frames-per-quad 8}))
   player-state)
 
 (fn on-key-released [player-state keyboard key]

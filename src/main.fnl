@@ -26,8 +26,6 @@
 (local target-square (/ GAME-WIDTH area-grid))
 (global CAMERA-ZOOM (/ target-square tile-size))
 
-
-
 (local world (require :world))
 
 (local -keyboard {:up false :down false :left false :right false})

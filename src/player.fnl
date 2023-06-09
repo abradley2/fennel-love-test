@@ -20,23 +20,15 @@
   {:player-entity true
    :x 256
    :y 256
-   :moving false
-   :direction :down
-   :direction-delta 0
-   :delta-per-frame 16
+   :action {:name :down :animating false :frame-delta 0 :frames-per-quad 16}
    :speed 1.5
+   :quad-sets (-> (-player-sprite-sheet) (-player-sprite-quads))
    :draw [player-sprite-sheet
           (-> (. player-sprite-quads :down)
               (. 1))]})
 
-(fn choose-sprite-quad [sprite-quads delta delta-per-frame]
-  (let [cur-frame (+ 1 (math.floor (/ delta delta-per-frame)))]
-    (if (. sprite-quads cur-frame)
-        [(. sprite-quads cur-frame) delta]
-        (choose-sprite-quad sprite-quads 0 delta-per-frame))))
-
 (fn handle-collisions [[next-x next-y] player-state area tile-idx?]
-  (let [direction (. player-state :direction)
+  (let [direction (. player-state :action)
         world (. area :world)
         tile-idx (or tile-idx? 1)
         world-tile (. world tile-idx)
@@ -68,22 +60,10 @@
             (handle-collisions [next-x next-y] player-state area (+ tile-idx 1))))))
 
 (fn on-update [delta player-state player-sprite-quads keyboard area]
-  (let [speed (* (. player-state :speed) delta)
-        [sprite-sheet _] (. player-state :draw)
-        [sprite-quad next-delta] (choose-sprite-quad (->> (. player-state
-                                                             :direction)
-                                                          (. player-sprite-quads))
-                                                     (. player-state
-                                                        :direction-delta)
-                                                     (. player-state
-                                                        :delta-per-frame))]
-    (tset player-state :direction-delta next-delta)
-    (tset player-state :draw [sprite-sheet sprite-quad])
-    (if (. player-state :moving)
+  (let [speed (* (. player-state :speed) delta)]
+    (if (-?> (. player-state :action) (. :animating))
         (do
-          (tset player-state :direction-delta
-                (+ (. player-state :direction-delta) speed))
-          (-> (case (. player-state :direction)
+          (-> (case (-> (. player-state :action) (. :name))
                 :up
                 [(. player-state :x) (- (. player-state :y) speed)]
                 :down
@@ -98,25 +78,17 @@
 (fn on-key-pressed [player-state key]
   (case key
     :up
-    (do
-      (tset player-state :moving true)
-      (tset player-state :direction :up)
-      (tset player-state :direction-delta 17))
+    (tset player-state :action
+          {:name :up :animating true :frame-delta 17 :frames-per-quad 16})
     :down
-    (do
-      (tset player-state :moving true)
-      (tset player-state :direction :down)
-      (tset player-state :direction-delta 17))
+    (tset player-state :action
+          {:name :down :animating true :frame-delta 17 :frames-per-quad 16})
     :left
-    (do
-      (tset player-state :moving true)
-      (tset player-state :direction :left)
-      (tset player-state :direction-delta 17))
+    (tset player-state :action
+          {:name :left :animating true :frame-delta 17 :frames-per-quad 16})
     :right
-    (do
-      (tset player-state :moving true)
-      (tset player-state :direction :right)
-      (tset player-state :direction-delta 17)))
+    (tset player-state :action
+          {:name :right :animating true :frame-delta 17 :frames-per-quad 16}))
   player-state)
 
 (fn on-key-released [player-state keyboard key]
@@ -131,13 +103,12 @@
           (or (when (. keyboard :left) (on-key-pressed :left)))
           (or (when (. keyboard :right) (on-key-pressed :right))))
       (do
-        (tset player-state :moving false)
-        (tset player-state :direction-delta 0))))
+        (-> (. player-state :action) (tset :animating false))
+        (-> (. player-state :action) (tset :frame-delta 0)))))
 
 {:player-sprite-sheet -player-sprite-sheet
  :player-sprite-quads -player-sprite-quads
  :init-player-state -init-player-state
- : choose-sprite-quad
  : on-update
  : on-key-pressed
  : on-key-released}

@@ -16,11 +16,10 @@
                                                                    :y)
                                                                 16 16)]
                  (if (-> collides-with-player
-                        (and (= 0 (. entity :shove-delta-y)))
-                        (and (= 0 (. entity :shove-delta-x)))
-                        (and (= 0 (. player-state :shove-delta-y)))
-                        (and (= 0 (. player-state :shove-delta-x)))
-                 )
+                         (and (= 0 (. entity :shove-delta-y)))
+                         (and (= 0 (. entity :shove-delta-x)))
+                         (and (= 0 (. player-state :shove-delta-y)))
+                         (and (= 0 (. player-state :shove-delta-x))))
                      (case (. entity :facing)
                        :down
                        (do

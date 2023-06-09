@@ -1,26 +1,5 @@
 (local ecs (require :lib.ecs))
-
-(local enemy-sprite-sheet
-       (love.graphics.newImage :assets/sprites/enemy_sprite_sheet.png))
-
-(fn init-charger [x y]
-  (let [attrs {: x
-               : y
-               :action {:name :move-down :frames-per-quad 20 :animating true}
-               :quad-sets {:move-down [(love.graphics.newQuad 120 120 16 16
-                                                              enemy-sprite-sheet)
-                                       (love.graphics.newQuad 120 150 16 16
-                                                              enemy-sprite-sheet)]
-                           :move-left []
-                           :move-right []
-                           :move-up []}
-               :draw nil}]
-    (tset attrs :draw [enemy-sprite-sheet
-                       (-> attrs
-                           (. :quad-sets)
-                           (. (-> attrs (. :action) (. :name)))
-                           (. 1))])
-    attrs))
+(local enemy (require :enemy))
 
 (local enemies [])
 
@@ -29,7 +8,9 @@
     (let [id (. entity :original-tile-id)
           x (. entity :x)
           y (. entity :y)]
-      (if (= id 2) (table.insert enemies (init-charger x y)) nil))))
+      (if (= enemy.charger-tile-id id)
+          (table.insert enemies (enemy.init-charger x y))
+          nil))))
 
 (local player-system (ecs.processingSystem))
 

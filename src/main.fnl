@@ -2,6 +2,7 @@
 (local ecs (require :lib.ecs))
 (local util (require :util))
 (local action_animation (require :systems.action_animation))
+(local touch_damage (require :systems.touch_damage))
 (local area_50_50 (require :map.area_50_50))
 
 (local map-logic {:area_50_50.json area_50_50})
@@ -65,7 +66,10 @@
 
 (tset draw-system :filter (ecs.requireAll :draw))
 
-(local ecs-world (ecs.world draw-system (. action_animation :system)))
+(local ecs-world (ecs.world draw-system))
+
+(action_animation.init ecs-world)
+(touch_damage.init ecs-world)
 
 (ecs.addEntity ecs-world player-state)
 

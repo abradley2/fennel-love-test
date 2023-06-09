@@ -27,4 +27,7 @@
 (tset system :filter (ecs.requireAll :quad-sets :action :draw))
 (tset system :process system-process)
 
-{:sprite-sheet -sprite-sheet : system}
+(fn init [world]
+  (ecs.addSystem world system))
+
+{: init}

@@ -9,7 +9,6 @@ build: .local/fennel .local/busted/
 	.local/fennel --compile src/player.fnl > src/player.lua
 	.local/fennel --compile src/main.fnl > src/main.lua
 	.local/fennel --compile src/map/area_50_50.fnl > src/map/area_50_50.lua
-	# .local/busted/bin/busted src
 
 lint: .local/fnlfmt
 	.local/fnlfmt/bin/fnlfmt --fix src/systems/movement.fnl

@@ -22,6 +22,9 @@
                                        (player-sprite-sheet:getDimensions))]})
 
 (local player-state {:player-entity true
+                     :shove-delta-x 0
+                     :shove-delta-y 0
+                     :shove-delta-per-frame 0
                      :x 256
                      :y 256
                      :action {:name :down

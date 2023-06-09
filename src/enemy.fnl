@@ -7,6 +7,9 @@
   (let [attrs {: x
                : y
                :touch-damage 1
+               :shove-delta-x 0
+               :shove-delta-y 0
+               :shove-delta-per-frame 0
                :facing :down
                :action {:name :move-down :frames-per-quad 20 :animating true}
                :quad-sets {:move-down [(love.graphics.newQuad 120 120 16 16

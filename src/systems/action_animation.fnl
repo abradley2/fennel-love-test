@@ -28,6 +28,7 @@
 (tset system :process system-process)
 
 (fn init [world]
-  (ecs.addSystem world system))
+  (ecs.addSystem world system)
+  (ecs.setSystemIndex world system 1))
 
 {: init}

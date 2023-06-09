@@ -21,16 +21,18 @@
                 (love.graphics.newQuad 90 0 16 16
                                        (player-sprite-sheet:getDimensions))]})
 
-(fn init-player-state []
-  {:player-entity true
-   :x 256
-   :y 256
-   :action {:name :down :animating false :frame-delta 0 :frames-per-quad 16}
-   :speed 1.5
-   :quad-sets player-sprite-quads
-   :draw [player-sprite-sheet
-          (-> (. player-sprite-quads :down)
-              (. 1))]})
+(local player-state {:player-entity true
+                     :x 256
+                     :y 256
+                     :action {:name :down
+                              :animating false
+                              :frame-delta 0
+                              :frames-per-quad 16}
+                     :speed 1.5
+                     :quad-sets player-sprite-quads
+                     :draw [player-sprite-sheet
+                            (-> (. player-sprite-quads :down)
+                                (. 1))]})
 
 (fn handle-collisions [[next-x next-y] player-state area tile-idx?]
   (let [direction (. player-state :action)
@@ -111,4 +113,4 @@
         (-> (. player-state :action) (tset :animating false))
         (-> (. player-state :action) (tset :frame-delta 0)))))
 
-{: init-player-state : on-update : on-key-pressed : on-key-released}
+{: player-state : on-update : on-key-pressed : on-key-released}

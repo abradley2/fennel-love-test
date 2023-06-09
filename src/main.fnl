@@ -24,7 +24,7 @@
 (global CAMERA-ZOOM (/ target-square tile-size))
 
 (local player (require :player))
-(local player-state (player.init-player-state))
+(local player-state (. player :player-state))
 
 (local world (require :world))
 
@@ -64,6 +64,7 @@
 (tset draw-system :filter (ecs.requireAll :draw))
 
 (local ecs-world (ecs.world draw-system))
+(ecs.setSystemIndex ecs-world draw-system 1)
 
 (action_animation.init ecs-world)
 (touch_damage.init ecs-world)

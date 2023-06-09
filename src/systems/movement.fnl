@@ -30,20 +30,25 @@
   nil)
 
 (fn check-movement [entity area tile-idx?]
+  (print "CHECK MOVEMENT FOR ENTITY" entity)
   (let [tile-idx (or tile-idx? 1)
         tile (. area tile-idx)]
     (if (not= nil tile)
         (let [does-collide (check-collision entity tile)]
           (if does-collide
               (adjust-entity entity tile)
-              (do
-                (tset entity :x (. entity :to-x))
-                (tset entity :y (. entity :to-y)))))
-        nil)))
+              (check-movement entity area (+ tile-idx 1))))
+        (do
+          (tset entity :x (. entity :to-x))
+          (tset entity :y (. entity :to-y))))))
 
 (fn create-process-movement-system [area]
   (fn [_system entity [draw delta]]
-    (if draw nil (check-movement entity area))))
+    (if draw nil (if (-> true
+                         (and (= (. entity :x) (. entity :to-x)))
+                         (and (= (. entity :y) (. entity :to-y))))
+                     nil
+                     (check-movement entity area)))))
 
 (fn init [world area]
   (let [movement-system (ecs.processingSystem)]
@@ -54,7 +59,7 @@
               create-process-movement-system))
     (set area-movement-system movement-system)
     (ecs.addSystem world area-movement-system)
-    (ecs.setSystemIndex world area-movement-system 3)))
+    (ecs.setSystemIndex world area-movement-system 4)))
 
 (fn deinit [world]
   (ecs.removeSystem world area-movement-system))

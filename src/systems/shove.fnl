@@ -37,13 +37,13 @@
                      (if (> (. entity :shove-delta-x) 0)
                          (do
                            (halt-entity entity)
-                           (tset entity :x (+ (. entity :x) shove-distance))
+                           (tset entity :to-x (+ (. entity :x) shove-distance))
                            (tset entity :shove-delta-x
                                  (- (. entity :shove-delta-x) shove-distance)))
                          (< (. entity :shove-delta-x) 0)
                          (do
                            (halt-entity entity)
-                           (tset entity :x (- (. entity :x) shove-distance))
+                           (tset entity :to-x (- (. entity :x) shove-distance))
                            (tset entity :shove-delta-x
                                  (+ (. entity :shove-delta-x) shove-distance)))
                          nil)
@@ -51,13 +51,13 @@
                      (if (> (. entity :shove-delta-y) 0)
                          (do
                            (halt-entity entity)
-                           (tset entity :y (+ (. entity :y) shove-distance))
+                           (tset entity :to-y (+ (. entity :y) shove-distance))
                            (tset entity :shove-delta-y
                                  (- (. entity :shove-delta-y) shove-distance)))
                          (< (. entity :shove-delta-y) 0)
                          (do
                            (halt-entity entity)
-                           (tset entity :y (- (. entity :y) shove-distance))
+                           (tset entity :to-y (- (. entity :y) shove-distance))
                            (tset entity :shove-delta-y
                                  (+ (. entity :shove-delta-y) shove-distance)))
                          nil)

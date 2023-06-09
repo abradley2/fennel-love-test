@@ -26,7 +26,9 @@
                      :shove-delta-y 0
                      :shove-delta-per-frame 0
                      :x 256
+                     :to-x 256
                      :y 256
+                     :to-y 256
                      :action {:name :down
                               :animating false
                               :frame-delta 0

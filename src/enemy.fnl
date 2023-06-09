@@ -6,6 +6,10 @@
 (fn init-charger [x y]
   (let [attrs {: x
                : y
+               :to-x x
+               :to-y y
+               :width 16
+               :height 16
                :touch-damage 1
                :shove-delta-x 0
                :shove-delta-y 0

@@ -1,28 +1,33 @@
 (local util (require :util))
 
-(fn -player-sprite-sheet []
-  (love.graphics.newImage :assets/sprites/player_sprite_sheet.png))
+(local player-sprite-sheet
+       (love.graphics.newImage :assets/sprites/player_sprite_sheet.png))
 
-(fn -player-sprite-quads [player-sprite-sheet]
-  {:down [(love.graphics.newQuad 0 0 16 16 (player-sprite-sheet:getDimensions))
-          (love.graphics.newQuad 0 30 16 16 (player-sprite-sheet:getDimensions))]
-   :left [(love.graphics.newQuad 30 0 16 16 (player-sprite-sheet:getDimensions))
-          (love.graphics.newQuad 30 30 16 16
-                                 (player-sprite-sheet:getDimensions))]
-   :up [(love.graphics.newQuad 60 0 16 16 (player-sprite-sheet:getDimensions))
-        (love.graphics.newQuad 60 30 16 16 (player-sprite-sheet:getDimensions))]
-   :right [(love.graphics.newQuad 90 30 16 16
-                                  (player-sprite-sheet:getDimensions))
-           (love.graphics.newQuad 90 0 16 16
-                                  (player-sprite-sheet:getDimensions))]})
+(local player-sprite-quads
+       {:down [(love.graphics.newQuad 0 0 16 16
+                                      (player-sprite-sheet:getDimensions))
+               (love.graphics.newQuad 0 30 16 16
+                                      (player-sprite-sheet:getDimensions))]
+        :left [(love.graphics.newQuad 30 0 16 16
+                                      (player-sprite-sheet:getDimensions))
+               (love.graphics.newQuad 30 30 16 16
+                                      (player-sprite-sheet:getDimensions))]
+        :up [(love.graphics.newQuad 60 0 16 16
+                                    (player-sprite-sheet:getDimensions))
+             (love.graphics.newQuad 60 30 16 16
+                                    (player-sprite-sheet:getDimensions))]
+        :right [(love.graphics.newQuad 90 30 16 16
+                                       (player-sprite-sheet:getDimensions))
+                (love.graphics.newQuad 90 0 16 16
+                                       (player-sprite-sheet:getDimensions))]})
 
-(fn -init-player-state [player-sprite-sheet player-sprite-quads]
+(fn init-player-state []
   {:player-entity true
    :x 256
    :y 256
    :action {:name :down :animating false :frame-delta 0 :frames-per-quad 16}
    :speed 1.5
-   :quad-sets (-> (-player-sprite-sheet) (-player-sprite-quads))
+   :quad-sets player-sprite-quads
    :draw [player-sprite-sheet
           (-> (. player-sprite-quads :down)
               (. 1))]})
@@ -59,7 +64,7 @@
               (tset player-state :y next-y))
             (handle-collisions [next-x next-y] player-state area (+ tile-idx 1))))))
 
-(fn on-update [delta player-state player-sprite-quads keyboard area]
+(fn on-update [delta player-state keyboard area]
   (let [speed (* (. player-state :speed) delta)]
     (if (-?> (. player-state :action) (. :animating))
         (do
@@ -106,9 +111,4 @@
         (-> (. player-state :action) (tset :animating false))
         (-> (. player-state :action) (tset :frame-delta 0)))))
 
-{:player-sprite-sheet -player-sprite-sheet
- :player-sprite-quads -player-sprite-quads
- :init-player-state -init-player-state
- : on-update
- : on-key-pressed
- : on-key-released}
+{: init-player-state : on-update : on-key-pressed : on-key-released}

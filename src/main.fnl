@@ -24,10 +24,7 @@
 (global CAMERA-ZOOM (/ target-square tile-size))
 
 (local player (require :player))
-(local player-sprite-sheet (player.player-sprite-sheet))
-(local player-sprite-quads (player.player-sprite-quads player-sprite-sheet))
-(local player-state
-       (player.init-player-state player-sprite-sheet player-sprite-quads))
+(local player-state (player.init-player-state))
 
 (local world (require :world))
 
@@ -154,7 +151,7 @@
               (check-for-area-transition)
               (set area-transition-tick 0))
             nil)
-        (player.on-update delta player-state player-sprite-quads -keyboard area))
+        (player.on-update delta player-state -keyboard area))
       (let [delta (/ dt 0.0166)
             animate-speed (* 8 delta)
             player-transition-mod (/ (+ area-size tile-size) area-size)

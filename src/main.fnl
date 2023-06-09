@@ -1,9 +1,12 @@
 (local json (require :lib.json))
 (local ecs (require :lib.ecs))
 (local util (require :util))
+(local player (require :player))
 (local action_animation (require :systems.action_animation))
 (local touch_damage (require :systems.touch_damage))
 (local area_50_50 (require :map.area_50_50))
+
+(local player-state (. player :player-state))
 
 (local map-logic {:area_50_50.json area_50_50})
 
@@ -23,8 +26,7 @@
 (local target-square (/ GAME-WIDTH area-grid))
 (global CAMERA-ZOOM (/ target-square tile-size))
 
-(local player (require :player))
-(local player-state (. player :player-state))
+
 
 (local world (require :world))
 

@@ -21,21 +21,25 @@
                        (do
                          (tset player-state :shove-delta-per-frame 2)
                          (tset player-state :shove-delta-y 16)
+                         (tset entity :shove-delta-per-frame 2)
                          (tset entity :shove-delta-y -16))
                        :up
                        (do
                          (tset player-state :shove-delta-per-frame 2)
                          (tset player-state :shove-delta-y -16)
+                         (tset entity :shove-delta-per-frame 2)
                          (tset entity :shove-delta-y 16))
                        :left
                        (do
                          (tset player-state :shove-delta-per-frame 2)
                          (tset player-state :shove-delta-x 16)
+                         (tset entity :shove-delta-per-frame 2)
                          (tset entity :shove-delta-x -16))
                        :right
                        (do
                          (tset player-state :shove-delta-per-frame 2)
                          (tset player-state :shove-delta-x -16)
+                         (tset entity :shove-delta-per-frame 2)
                          (tset entity :shove-delta-x 16)))
                      nil))))
 

@@ -5,6 +5,7 @@
 (local action_animation (require :systems.action_animation))
 (local touch_damage (require :systems.touch_damage))
 (local shove (require :systems.shove))
+(local movement (require :systems.movement))
 (local area_50_50 (require :map.area_50_50))
 
 (local player-state (. player :player-state))

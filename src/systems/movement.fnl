@@ -5,6 +5,16 @@
 
 (local movement-system (ecs.processingSystem))
 
+(fn area-to-collisions [area-tiles]
+  (accumulate [collision-tiles [] _ area-tile (pairs area-tiles)]
+    (do
+      (if (-> false 
+          (or (not= (. area-tile :original-tile-id) 1))
+          (or (not= (. area-tile :orginal-tile-id) 10)))
+          nil
+          (table.insert collision-tiles area-tile))
+      collision-tiles)))
+
 (fn check-collision [entity tile]
   (util.check-collision (. entity :to-x) (. entity :to-y) (. entity :width)
                         (. entity :heith) (. tile :x) (. tile :y)

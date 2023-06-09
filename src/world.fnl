@@ -85,6 +85,8 @@
              :original-tile-id (. quad :original-tile-id)
              :x (* col-zidx (. quad :width))
              :y (* row-zidx (. quad :height))
+             :width 16
+             :height 16
              :display-x (* col-zidx (-> (. quad :width) (* CAMERA-ZOOM)))
              :display-y (* row-zidx (-> (. quad :height) (* CAMERA-ZOOM)))
              :visible (. layer :visible)})))))

@@ -8,9 +8,9 @@
 (fn area-to-collisions [area-tiles]
   (accumulate [collision-tiles [] _ area-tile (pairs area-tiles)]
     (do
-      (if (-> false 
-          (or (not= (. area-tile :original-tile-id) 1))
-          (or (not= (. area-tile :orginal-tile-id) 10)))
+      (if (-> false
+              (or (not= (. area-tile :original-tile-id) 1))
+              (or (not= (. area-tile :orginal-tile-id) 10)))
           nil
           (table.insert collision-tiles area-tile))
       collision-tiles)))
@@ -49,10 +49,14 @@
   (let [movement-system (ecs.processingSystem)]
     (tset movement-system :filter
           (ecs.requireAll :x :y :to-x :to-y :width :height))
-    (tset movement-system :process (create-movement-system-process area))
+    (tset movement-system :process
+          (-> (area-to-collisions area)
+              create-process-movement-system))
     (set area-movement-system movement-system)
     (ecs.addSystem world area-movement-system)
-    (ecs.setSystemIndex area-movement-system 3)))
+    (ecs.setSystemIndex world area-movement-system 3)))
 
 (fn deinit [world]
   (ecs.removeSystem world area-movement-system))
+
+{: init : deinit}

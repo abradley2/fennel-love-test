@@ -83,7 +83,8 @@
           (ecs.removeEntity ecs-world logic-tile))
         (each [_ world-tile (pairs (. area :world))]
           (tset world-tile :type :world-tile)
-          (ecs.addEntity ecs-world world-tile)))
+          (ecs.addEntity ecs-world world-tile))
+        (movement.deinit ecs-world))
       nil)
   (let [tiled-map (world.read-tiled-map area-name)
         system (. map-logic area-name)] ; add to world
@@ -91,6 +92,7 @@
       (ecs.addEntity ecs-world logic-tile))
     (each [_ world-tile (pairs (. tiled-map :world))]
       (ecs.addEntity ecs-world world-tile))
+    (movement.init ecs-world (. tiled-map :world))
     (tset area :world (. tiled-map :world))
     (tset area :logic (. tiled-map :logic))
     (tset area :entities (. tiled-map :entities))

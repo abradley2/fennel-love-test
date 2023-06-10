@@ -29,6 +29,8 @@
                      :to-x 256
                      :y 256
                      :to-y 256
+                     :width 16
+                     :height 16
                      :action {:name :down
                               :animating false
                               :frame-delta 0
@@ -39,52 +41,18 @@
                             (-> (. player-sprite-quads :down)
                                 (. 1))]})
 
-(fn handle-collisions [[next-x next-y] player-state area tile-idx?]
-  (let [direction (. player-state :action)
-        world (. area :world)
-        tile-idx (or tile-idx? 1)
-        world-tile (. world tile-idx)
-        does-collide (case (-?> world-tile (. :original-tile-id))
-                       1
-                       false
-                       8
-                       false
-                       9
-                       false
-                       10
-                       false
-                       17
-                       false
-                       18
-                       false
-                       nil
-                       false
-                       _
-                       (util.check-collision (+ 4 next-x) (+ 10 next-y) 8 5
-                                             (. world-tile :x) (. world-tile :y)
-                                             16 16))]
-    (if does-collide
-        nil
-        (if (= world-tile nil)
-            (do
-              (tset player-state :x next-x)
-              (tset player-state :y next-y))
-            (handle-collisions [next-x next-y] player-state area (+ tile-idx 1))))))
-
 (fn on-update [delta player-state keyboard area]
   (let [speed (* (. player-state :speed) delta)]
     (if (-?> (. player-state :action) (. :animating))
-        (do
-          (-> (case (-> (. player-state :action) (. :name))
-                :up
-                [(. player-state :x) (- (. player-state :y) speed)]
-                :down
-                [(. player-state :x) (+ (. player-state :y) speed)]
-                :left
-                [(- (. player-state :x) speed) (. player-state :y)]
-                :right
-                [(+ (. player-state :x) speed) (. player-state :y)])
-              (handle-collisions player-state area)))
+        (case (-> (. player-state :action) (. :name))
+          :up
+          (tset player-state :to-y (- (. player-state :y) speed))
+          :down
+          (tset player-state :to-y (+ (. player-state :y) speed))
+          :left
+          (tset player-state :to-x (- (. player-state :x) speed))
+          :right
+          (tset player-state :to-x (+ (. player-state :x) speed)))
         nil)))
 
 (fn on-key-pressed [player-state key]

@@ -7,30 +7,49 @@
 
 (fn area-to-collisions [area-tiles]
   (accumulate [collision-tiles [] _ area-tile (pairs area-tiles)]
-    (do
-      (if (-> false
-              (or (not= (. area-tile :original-tile-id) 1))
-              (or (not= (. area-tile :orginal-tile-id) 10)))
-          nil
-          (table.insert collision-tiles area-tile))
+    (let [should-check-collision (-> true
+                                     (and (not= (. area-tile :original-tile-id)
+                                                1))
+                                     (and (not= (. area-tile :original-tile-id)
+                                                10)))]
+      (if should-check-collision
+          (table.insert collision-tiles area-tile)
+          nil)
       collision-tiles)))
 
 (fn check-collision [entity tile]
   (util.check-collision (. entity :to-x) (. entity :to-y) (. entity :width)
-                        (. entity :heith) (. tile :x) (. tile :y)
+                        (. entity :height) (. tile :x) (. tile :y)
                         (. tile :width) (. tile :height)))
 
 (fn get-direction [entity]
-  (if (> (. entity :x) (. entity :to-x)) :right
-      (< (. entity :x) (. entity :to-x)) :left
-      (> (. entity :y) (. entity :to-y)) :down
-      (< (. entity :y) (. entity :to-y)) :up))
+  (if (> (. entity :x) (. entity :to-x)) :left
+      (< (. entity :x) (. entity :to-x)) :right
+      (> (. entity :y) (. entity :to-y)) :up
+      (< (. entity :y) (. entity :to-y)) :down))
 
 (fn adjust-entity [entity border-tile]
-  nil)
+  (let [direction (get-direction entity)]
+    (case direction
+      :right
+      (do
+        (tset entity :x (-> (. border-tile :x) (- (. entity :width)) (- 1)))
+        (tset entity :to-x (. entity :x)))
+      :left
+      (do
+        (tset entity :x (-> (. border-tile :x) (+ (. entity :width)) (+ 1)))
+        (tset entity :to-x (. entity :x)))
+      :up
+      (do
+        (tset entity :y (-> (. border-tile :y) (+ (. entity :height)) (+ 1)))
+        (tset entity :to-y (. entity :y)))
+      :down
+      (do
+        (tset entity :y (-> (. border-tile :y) (- (. entity :height)) (- 1)))
+        (tset entity :to-y (. entity :y))))
+    nil))
 
 (fn check-movement [entity area tile-idx?]
-  (print "CHECK MOVEMENT FOR ENTITY" entity)
   (let [tile-idx (or tile-idx? 1)
         tile (. area tile-idx)]
     (if (not= nil tile)

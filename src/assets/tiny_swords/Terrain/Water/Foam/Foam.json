@@ -1,0 +1,14 @@
+{ "columns":46,
+ "image":"Foam.png",
+ "imageheight":192,
+ "imagewidth":1536,
+ "margin":1,
+ "name":"Foam",
+ "spacing":1,
+ "tilecount":230,
+ "tiledversion":"1.10.1",
+ "tileheight":16,
+ "tilewidth":16,
+ "type":"tileset",
+ "version":"1.10"
+}

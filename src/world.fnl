@@ -71,8 +71,7 @@
       joined)))
 
 (fn create-layers [quads layers]
-  (collect [_k layer (ipairs layers)]
-    (. layer :name)
+  (icollect [_k layer (ipairs layers)]
     (icollect [idx tile-id (ipairs (. layer :data))]
       (let [columns (. layer :width)
             row-zidx (math.floor (/ (- idx 1) columns))
@@ -102,14 +101,16 @@
         layers (. map-data :layers)
         tilesets (. map-data :tilesets)]
     (map-fh:close)
-    (-> (collect [_k tileset-metadata (ipairs tilesets)]
+    (-> (icollect [_k tileset-metadata (ipairs tilesets)]
           (let [source (. tileset-metadata :source)
                 first-gid (. tileset-metadata :firstgid)
                 tileset-fh (io.open (.. :./src/map/ source))
                 tileset-json (tileset-fh:read :*all)
                 tileset-data (json.decode tileset-json)]
-            (values source (get-quad-table first-gid tileset-data))))
-        merge-tables
+            (get-quad-table first-gid tileset-data)))
+        (merge-tables)
         (create-layers layers))))
 
+; (do (local world (require :src.world)) (world.read-tiled-map :map_50_50.json))
+; (do (local world (require :src.world)) (-> (world.read-tiled-map :map_50_50.json) (. 2) ) )
 {: read-tiled-map :create-sprite-batches -create-sprite-batches}

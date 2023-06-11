@@ -35,7 +35,7 @@
                               :animating false
                               :frame-delta 0
                               :frames-per-quad 16}
-                     :speed 1.5
+                     :speed 3
                      :quad-sets player-sprite-quads
                      :draw [player-sprite-sheet
                             (-> (. player-sprite-quads :down)

@@ -1,0 +1,14 @@
+{ "columns":8,
+ "image":"Tilemap_Elevation.png",
+ "imageheight":512,
+ "imagewidth":256,
+ "margin":0,
+ "name":"Tilemap_Elevation",
+ "spacing":0,
+ "tilecount":128,
+ "tiledversion":"1.10.1",
+ "tileheight":32,
+ "tilewidth":32,
+ "type":"tileset",
+ "version":"1.10"
+}

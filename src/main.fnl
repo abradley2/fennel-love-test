@@ -6,7 +6,6 @@
 (local touch_damage (require :systems.touch_damage))
 (local shove (require :systems.shove))
 (local movement (require :systems.movement))
-(local area_50_50 (require :map.area_50_50))
 
 (local player-state (. player :player-state))
 
@@ -22,8 +21,8 @@
 
 ; These are not configurable. Do not change.
 (local area-grid 32)
-(local area-size 512)
-(local tile-size 16)
+(local area-size 1024)
+(local tile-size 32)
 
 (local target-square (/ GAME-WIDTH area-grid))
 (global CAMERA-ZOOM (/ target-square tile-size))
@@ -32,12 +31,7 @@
 
 (local -keyboard {:up false :down false :left false :right false})
 
-(local area {:world nil
-             :logic nil
-             :entities nil
-             :sprite-batches nil
-             :entity-sprites nil
-             :area-systems nil})
+(local area {:sprite-batch-groups nil :area-systems nil})
 
 (local world-map-data (let [world-map-fh (io.open :./src/map/map.world)
                             world-map-json (world-map-fh:read :*all)]
@@ -60,7 +54,7 @@
                                                            (* CAMERA-ZOOM))
                                                        (-> (. entity :y)
                                                            (* CAMERA-ZOOM))
-                                                       0 CAMERA-ZOOM))
+                                                       0 1.5))
                                  nil)))
 
 (tset draw-system :filter (ecs.requireAll :draw))
@@ -75,34 +69,22 @@
 (ecs.addEntity ecs-world player-state)
 
 (fn set-area [area-name] ; clean up world
-  (if (not (= nil (. area :world)))
+  (if (not (= nil (. area :area-systems)))
       (do
         (-?> (. area :area-systems) (. :deinit) (#($1 ecs-world)))
-        (each [_ logic-tile (pairs (. area :logic))]
-          (tset logic-tile :type :logic-tile)
-          (ecs.removeEntity ecs-world logic-tile))
-        (each [_ world-tile (pairs (. area :world))]
-          (tset world-tile :type :world-tile)
-          (ecs.addEntity ecs-world world-tile))
         (movement.deinit ecs-world))
       nil)
-  (let [tiled-map (world.read-tiled-map area-name)
-        system (. map-logic area-name)] ; add to world
-    (each [_ logic-tile (pairs (. tiled-map :logic))]
-      (ecs.addEntity ecs-world logic-tile))
-    (each [_ world-tile (pairs (. tiled-map :world))]
-      (ecs.addEntity ecs-world world-tile))
-    (movement.init ecs-world (. tiled-map :world))
-    (tset area :world (. tiled-map :world))
-    (tset area :logic (. tiled-map :logic))
-    (tset area :entities (. tiled-map :entities))
-    (tset area :sprite-batches
-          (-> (. tiled-map :world) world.create-sprite-batches))
+  (let [layers (world.read-tiled-map area-name)
+        system (. map-logic area-name)] ; add to world ; TODO - Add collisions layers
+    (movement.init ecs-world [])
+    (tset area :sprite-batch-groups
+          (icollect [_ layer (ipairs layers)]
+            (world.create-sprite-batches layer)))
     (tset area :area-systems system)
     (-?> system (. :init) (#($1 ecs-world area))))
   area)
 
-(set-area :area_50_50.json)
+(set-area :map_50_50.json)
 
 (fn load-next-area [map-idx?]
   (let [map-idx (or map-idx? 1)
@@ -197,8 +179,9 @@
 
 (fn love.draw []
   (if (= nil (. game-state :leaving-area))
-      (each [_k sprite-batch (pairs (. area :sprite-batches))]
-        (love.graphics.draw sprite-batch))
+      (each [_k sprite-batch-group (ipairs (. area :sprite-batch-groups))]
+        (each [_ sprite-batch (pairs sprite-batch-group)]
+          (love.graphics.draw sprite-batch)))
       (let [[direction offset] (. game-state :animate-transition)
             entering-x-offset (if (= :left direction)
                                   (* (* offset CAMERA-ZOOM) -1)

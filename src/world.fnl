@@ -79,22 +79,20 @@
             quad (. quads tile-id)]
         (if (= quad nil)
             nil
-            (let [layer-zoom (/ (. quad :width) (. map-data :tilewidth))]
-              {: quad
-               : tile-id
-               :original-tile-id (. quad :original-tile-id)
-               ; it seems _REALLY OFF_ that I need to apply this offset to y after layer zoom
-               :x (* col-zidx (. quad :width) (/ layer-zoom))
-               :y (- (* row-zidx (. quad :height) (/ layer-zoom))
-                     (- (. quad :width) (. map-data :tilewidth)))
-               :width 16
-               :height 16
-               :display-x (* (* col-zidx (. quad :width) (/ layer-zoom))
-                             CAMERA-ZOOM)
-               :display-y (* (- (* row-zidx (. quad :height) (/ layer-zoom))
-                                (- (. quad :width) (. map-data :tilewidth)))
-                             CAMERA-ZOOM)
-               :visible (. layer :visible)}))))))
+            (let [layer-zoom (/ (. quad :width) (. map-data :tilewidth))
+                  attrs {: quad
+                         : tile-id
+                         :original-tile-id (. quad :original-tile-id)
+                         ; it seems _REALLY OFF_ that I need to apply this offset to y after layer zoom
+                         :x (* col-zidx (. quad :width) (/ layer-zoom))
+                         :y (- (* row-zidx (. quad :height) (/ layer-zoom))
+                               (- (. quad :width) (. map-data :tilewidth)))
+                         :width 16
+                         :height 16
+                         :visible (. layer :visible)}]
+              (tset attrs :display-x (* (. attrs :x) CAMERA-ZOOM))
+              (tset attrs :display-y (* (. attrs :y) CAMERA-ZOOM))
+              attrs))))))
 
 (fn read-tiled-map [map-file]
   (let [map-fh (io.open (.. :./src/map/ map-file))

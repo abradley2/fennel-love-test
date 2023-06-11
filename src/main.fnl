@@ -11,8 +11,8 @@
 
 (local map-logic {:area_50_50.json area_50_50})
 
-; (love.window.setMode 512 512 {:resizable false})
-(love.window.setMode 768 768 {:resizable false})
+(love.window.setMode 512 512 {:resizable false})
+; (love.window.setMode 768 768 {:resizable false})
 ; (love.window.setMode 1024 1024 {:resizable false})
 
 (love.graphics.setDefaultFilter :nearest)
@@ -50,9 +50,15 @@
                              (if draw
                                  (let [[sprite quad] (. entity :draw)]
                                    (love.graphics.draw sprite quad
-                                                       (-> (+ (. entity :x) (or (. entity :x-draw-offset) 0))
+                                                       (-> (+ (. entity :x)
+                                                              (or (. entity
+                                                                     :x-draw-offset)
+                                                                  0))
                                                            (* CAMERA-ZOOM))
-                                                       (-> (+ (. entity :y) (or (. entity :y-draw-offset) 0))
+                                                       (-> (+ (. entity :y)
+                                                              (or (. entity
+                                                                     :y-draw-offset)
+                                                                  0))
                                                            (* CAMERA-ZOOM))
                                                        0
                                                        (* CAMERA-ZOOM

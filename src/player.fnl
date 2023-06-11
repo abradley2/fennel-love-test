@@ -11,7 +11,6 @@
 (local quad-sets {:idle (offset-pairs-to-quads [[0 0]
                                                 [192 0]
                                                 [384 0]
-                                                
                                                 [768 0]
                                                 [960 0]])
                   :up (offset-pairs-to-quads [[0 192]

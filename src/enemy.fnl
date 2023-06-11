@@ -1,9 +1,22 @@
-(local enemy-sprite-sheet
-       (love.graphics.newImage :assets/sprites/enemy_sprite_sheet.png))
+(local torch-red-sprite-sheet (love.graphics.newImage :assets/Torch_Red.png))
 
-(local charger-tile-id 2)
+(local torch-red-tile-id 1)
 
-(fn init-charger [x y]
+(fn offset-pairs-to-quads [sprite-sheet-dimensions offset-pairs]
+  (icollect [_ [x y] (ipairs offset-pairs)]
+    (love.graphics.newQuad x y 192 192 sprite-sheet-dimensions)))
+
+(local torch-red-quad-sets
+       {:idle (offset-pairs-to-quads (torch-red-sprite-sheet:getDimensions)
+                                     [[0 0]
+                                      [192 0]
+                                      [384 0]
+                                      [576 0]
+                                      [768 0]
+                                      [960 0]
+                                      [1152 0]])})
+
+(fn init-torch-red [x y]
   (let [attrs {: x
                : y
                :to-x x
@@ -15,23 +28,8 @@
                :shove-delta-y 0
                :shove-delta-per-frame 0
                :facing :up
-               :action {:name :move-down :frames-per-quad 20 :animating true}
-               :quad-sets {:move-down [(love.graphics.newQuad 120 120 16 16
-                                                              enemy-sprite-sheet)
-                                       (love.graphics.newQuad 120 150 16 16
-                                                              enemy-sprite-sheet)]
-                           :move-left [(love.graphics.newQuad 120 120 16 16
-                                                              enemy-sprite-sheet)
-                                       (love.graphics.newQuad 120 150 16 16
-                                                              enemy-sprite-sheet)]
-                           :move-right [(love.graphics.newQuad 120 120 16 16
-                                                               enemy-sprite-sheet)
-                                        (love.graphics.newQuad 120 150 16 16
-                                                               enemy-sprite-sheet)]
-                           :move-up [(love.graphics.newQuad 120 120 16 16
-                                                            enemy-sprite-sheet)
-                                     (love.graphics.newQuad 120 150 16 16
-                                                            enemy-sprite-sheet)]}
+               :action {:name :idle :frames-per-quad 20 :animating true}
+               :quad-sets torch-red-quad-sets
                :draw nil}]
     (tset attrs :draw [enemy-sprite-sheet
                        (-> attrs

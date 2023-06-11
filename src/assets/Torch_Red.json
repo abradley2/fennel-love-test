@@ -1,0 +1,14 @@
+{ "columns":7,
+ "image":"Torch_Red.png",
+ "imageheight":960,
+ "imagewidth":1344,
+ "margin":0,
+ "name":"Torch_Red",
+ "spacing":0,
+ "tilecount":35,
+ "tiledversion":"1.10.1",
+ "tileheight":192,
+ "tilewidth":192,
+ "type":"tileset",
+ "version":"1.10"
+}

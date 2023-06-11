@@ -1,25 +1,35 @@
 (local util (require :util))
 
-(local player-sprite-sheet
-       (love.graphics.newImage :assets/sprites/player_sprite_sheet.png))
+(local player-sprite-sheet (love.graphics.newImage :assets/Warrior_Blue.png))
 
-(local player-sprite-quads
-       {:down [(love.graphics.newQuad 0 0 16 16
-                                      (player-sprite-sheet:getDimensions))
-               (love.graphics.newQuad 0 30 16 16
-                                      (player-sprite-sheet:getDimensions))]
-        :left [(love.graphics.newQuad 30 0 16 16
-                                      (player-sprite-sheet:getDimensions))
-               (love.graphics.newQuad 30 30 16 16
-                                      (player-sprite-sheet:getDimensions))]
-        :up [(love.graphics.newQuad 60 0 16 16
-                                    (player-sprite-sheet:getDimensions))
-             (love.graphics.newQuad 60 30 16 16
-                                    (player-sprite-sheet:getDimensions))]
-        :right [(love.graphics.newQuad 90 30 16 16
-                                       (player-sprite-sheet:getDimensions))
-                (love.graphics.newQuad 90 0 16 16
-                                       (player-sprite-sheet:getDimensions))]})
+(fn offset-pairs-to-quads [offset-pairs]
+  (icollect [_ [x y] (ipairs offset-pairs)]
+    (love.graphics.newQuad x y 192 192 (player-sprite-sheet:getDimensions))))
+
+(local quad-sets {:up (offset-pairs-to-quads [[0 192]
+                                              [192 192]
+                                              [384 192]
+                                              [567 192]
+                                              [768 192]
+                                              [960 192]])
+                  :down (offset-pairs-to-quads [[0 192]
+                                                [192 192]
+                                                [384 192]
+                                                [567 192]
+                                                [768 192]
+                                                [960 192]])
+                  :left (offset-pairs-to-quads [[0 192]
+                                                [192 192]
+                                                [384 192]
+                                                [567 192]
+                                                [768 192]
+                                                [960 192]])
+                  :right (offset-pairs-to-quads [[0 192]
+                                                 [192 192]
+                                                 [384 192]
+                                                 [567 192]
+                                                 [768 192]
+                                                 [960 192]])})
 
 (local player-state {:player-entity true
                      :shove-delta-x 0
@@ -36,9 +46,9 @@
                               :frame-delta 0
                               :frames-per-quad 16}
                      :speed 3
-                     :quad-sets player-sprite-quads
+                     : quad-sets
                      :draw [player-sprite-sheet
-                            (-> (. player-sprite-quads :down)
+                            (-> (. quad-sets :down)
                                 (. 1))]})
 
 (fn on-update [delta player-state keyboard area]

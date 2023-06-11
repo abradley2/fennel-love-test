@@ -54,7 +54,7 @@
                                                            (* CAMERA-ZOOM))
                                                        (-> (. entity :y)
                                                            (* CAMERA-ZOOM))
-                                                       0 1.5))
+                                                       0 CAMERA-ZOOM))
                                  nil)))
 
 (tset draw-system :filter (ecs.requireAll :draw))
@@ -129,19 +129,14 @@
 (var area-transition-tick 0)
 
 (fn love.update [dt]
+  (print (love.timer.getFPS))
   (ecs-world.update ecs-world [false (/ dt 0.0166)])
   (if (= nil (. game-state :leaving-area))
       (let [delta (/ dt 0.0166)]
-        (set area-transition-tick (+ area-transition-tick dt))
-        (if (and (> area-transition-tick 0.25)
-                 (= nil (. game-state :leaving-area)))
-            (do
-              (check-for-area-transition)
-              (set area-transition-tick 0))
-            nil)
+        (check-for-area-transition)
         (player.on-update delta player-state -keyboard area))
       (let [delta (/ dt 0.0166)
-            animate-speed (* 16 delta)
+            animate-speed (* 20 delta)
             [direction animation-offset] (. game-state :animate-transition)
             should-move-player true
             next-offset (math.max 0 (- animation-offset animate-speed))]
@@ -180,6 +175,7 @@
   (player.on-key-released player-state -keyboard key))
 
 (fn love.draw []
+  (print (love.timer.getFPS))
   (if (= nil (. game-state :leaving-area))
       (each [_k sprite-batch-group (ipairs (. area :sprite-batch-groups))]
         (each [_ sprite-batch (pairs sprite-batch-group)]

@@ -140,7 +140,6 @@
 (var area-transition-tick 0)
 
 (fn love.update [dt]
-  (print (love.timer.getFPS))
   (ecs-world.update ecs-world [false (/ dt 0.0166)])
   (if (= nil (. game-state :leaving-area))
       (let [delta (/ dt 0.0166)]
@@ -186,7 +185,6 @@
   (player.on-key-released player-state -keyboard key))
 
 (fn love.draw []
-  (print (love.timer.getFPS))
   (if (= nil (. game-state :leaving-area))
       (each [_k sprite-batch-group (ipairs (. area :sprite-batch-groups))]
         (each [_ sprite-batch (pairs sprite-batch-group)]

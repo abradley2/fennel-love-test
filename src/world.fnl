@@ -70,7 +70,7 @@
       (each [i v (pairs table)] (tset joined i v))
       joined)))
 
-(fn create-layers [quads layers]
+(fn create-layers [quads layers map-data]
   (icollect [_k layer (ipairs layers)]
     (icollect [idx tile-id (ipairs (. layer :data))]
       (let [columns (. layer :width)
@@ -79,16 +79,22 @@
             quad (. quads tile-id)]
         (if (= quad nil)
             nil
-            {: quad
-             : tile-id
-             :original-tile-id (. quad :original-tile-id)
-             :x (* col-zidx (. quad :width))
-             :y (* row-zidx (. quad :height))
-             :width 16
-             :height 16
-             :display-x (* col-zidx (-> (. quad :width) (* CAMERA-ZOOM)))
-             :display-y (* row-zidx (-> (. quad :height) (* CAMERA-ZOOM)))
-             :visible (. layer :visible)})))))
+            (let [layer-zoom (/ (. quad :width) (. map-data :tilewidth))]
+              {: quad
+               : tile-id
+               :original-tile-id (. quad :original-tile-id)
+               ; it seems _REALLY OFF_ that I need to apply this offset to y after layer zoom
+               :x (* col-zidx (. quad :width) (/ layer-zoom))
+               :y (- (* row-zidx (. quad :height) (/ layer-zoom))
+                     (- (. quad :width) (. map-data :tilewidth)))
+               :width 16
+               :height 16
+               :display-x (* (* col-zidx (. quad :width) (/ layer-zoom))
+                             CAMERA-ZOOM)
+               :display-y (* (- (* row-zidx (. quad :height) (/ layer-zoom))
+                                (- (. quad :width) (. map-data :tilewidth)))
+                             CAMERA-ZOOM)
+               :visible (. layer :visible)}))))))
 
 (fn read-tiled-map [map-file]
   (let [map-fh (io.open (.. :./src/map/ map-file))
@@ -109,7 +115,7 @@
                 tileset-data (json.decode tileset-json)]
             (get-quad-table first-gid tileset-data)))
         (merge-tables)
-        (create-layers layers))))
+        (create-layers layers map-data))))
 
 ; (do (local world (require :src.world)) (world.read-tiled-map :map_50_50.json))
 ; (do (local world (require :src.world)) (-> (world.read-tiled-map :map_50_50.json) (. 2) ) )

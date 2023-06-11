@@ -98,7 +98,7 @@
                               1 1)
         (do
           (tset game-state :leaving-area
-                {:sprite-batches (. area :sprite-batches)})
+                {:sprite-batch-groups (. area :sprite-batch-groups)})
           (tset game-state :entering-area (set-area (. map :fileName)))
           (tset game-state :world-offset-x (. map :x))
           (tset game-state :world-offset-y (. map :y))
@@ -141,7 +141,7 @@
             nil)
         (player.on-update delta player-state -keyboard area))
       (let [delta (/ dt 0.0166)
-            animate-speed (* 8 delta)
+            animate-speed (* 16 delta)
             player-transition-mod (/ (+ area-size tile-size) area-size)
             player-animate-speed (* animate-speed player-transition-mod)
             [direction animation-offset player-animation-offset] (. game-state
@@ -207,11 +207,14 @@
                                  (- (* offset CAMERA-ZOOM)
                                     (* area-size CAMERA-ZOOM))
                                  0)]
-        (each [_k sprite-batch (pairs (-> game-state (. :leaving-area)
-                                          (. :sprite-batches)))]
-          (love.graphics.draw sprite-batch (or leaving-x-offset 0)
-                              (or leaving-y-offset 0)))
-        (each [_k sprite-batch (pairs (-> game-state (. :entering-area)
-                                          (. :sprite-batches)))]
-          (love.graphics.draw sprite-batch entering-x-offset entering-y-offset))))
+        (each [_k sprite-batch-group (ipairs (-> game-state (. :leaving-area)
+                                                 (. :sprite-batch-groups)))]
+          (each [_ sprite-batch (pairs sprite-batch-group)]
+            (love.graphics.draw sprite-batch (or leaving-x-offset 0)
+                                (or leaving-y-offset 0))))
+        (each [_k sprite-batch-group (ipairs (-> game-state (. :entering-area)
+                                                 (. :sprite-batch-groups)))]
+          (each [_ sprite-batch (pairs sprite-batch-group)]
+            (love.graphics.draw sprite-batch (or entering-x-offset 0)
+                                (or entering-y-offset 0))))))
   (ecs-world.update ecs-world [true nil]))

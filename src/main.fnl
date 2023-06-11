@@ -54,7 +54,11 @@
                                                            (* CAMERA-ZOOM))
                                                        (-> (. entity :y)
                                                            (* CAMERA-ZOOM))
-                                                       0 CAMERA-ZOOM))
+                                                       0
+                                                       (* CAMERA-ZOOM
+                                                          (or (. entity
+                                                                 :zoom-mod)
+                                                              1))))
                                  nil)))
 
 (tset draw-system :filter (ecs.requireAll :draw))

@@ -8,13 +8,13 @@
 
 (fn process-touch-damage-system [_system entity [draw delta]]
   (if draw nil (let [collides-with-player (util.check-collision (. entity :x)
-                                                                (. entity :y) 16
-                                                                16
+                                                                (. entity :y) 32
+                                                                32
                                                                 (. player-state
                                                                    :x)
                                                                 (. player-state
                                                                    :y)
-                                                                16 16)]
+                                                                32 32)]
                  (if (-> collides-with-player
                          (and (= 0 (. entity :shove-delta-y)))
                          (and (= 0 (. entity :shove-delta-x)))
@@ -23,28 +23,28 @@
                      (case (. entity :facing)
                        :down
                        (do
-                         (tset player-state :shove-delta-per-frame 1.75)
-                         (tset player-state :shove-delta-y 16)
-                         (tset entity :shove-delta-per-frame 1.75)
-                         (tset entity :shove-delta-y -16))
+                         (tset player-state :shove-delta-per-frame 4)
+                         (tset player-state :shove-delta-y 32)
+                         (tset entity :shove-delta-per-frame 4)
+                         (tset entity :shove-delta-y -32))
                        :up
                        (do
-                         (tset player-state :shove-delta-per-frame 1.75)
-                         (tset player-state :shove-delta-y -16)
-                         (tset entity :shove-delta-per-frame 1.75)
-                         (tset entity :shove-delta-y 16))
+                         (tset player-state :shove-delta-per-frame 4)
+                         (tset player-state :shove-delta-y -32)
+                         (tset entity :shove-delta-per-frame 4)
+                         (tset entity :shove-delta-y 32))
                        :left
                        (do
-                         (tset player-state :shove-delta-per-frame 1.75)
-                         (tset player-state :shove-delta-x 16)
-                         (tset entity :shove-delta-per-frame 1.75)
-                         (tset entity :shove-delta-x -16))
+                         (tset player-state :shove-delta-per-frame 4)
+                         (tset player-state :shove-delta-x 32)
+                         (tset entity :shove-delta-per-frame 4)
+                         (tset entity :shove-delta-x -32))
                        :right
                        (do
-                         (tset player-state :shove-delta-per-frame 1.75)
-                         (tset player-state :shove-delta-x -16)
-                         (tset entity :shove-delta-per-frame 1.75)
-                         (tset entity :shove-delta-x 16)))
+                         (tset player-state :shove-delta-per-frame 4)
+                         (tset player-state :shove-delta-x -32)
+                         (tset entity :shove-delta-per-frame 4)
+                         (tset entity :shove-delta-x 32)))
                      nil))))
 
 (tset touch-damage-system :filter (ecs.requireAll :touch-damage :facing :x :y))

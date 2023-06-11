@@ -47,7 +47,7 @@
                      :to-x 256
                      :y 256
                      :to-y 256
-                     :zoom-mod 0.75
+                     :zoom-mod (/ 64 92)
                      :width 16
                      :height 16
                      :action {:name :idle

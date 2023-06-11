@@ -142,10 +142,8 @@
         (player.on-update delta player-state -keyboard area))
       (let [delta (/ dt 0.0166)
             animate-speed (* 16 delta)
-            player-transition-mod (/ (+ area-size tile-size) area-size)
-            player-animate-speed (* animate-speed player-transition-mod)
-            [direction animation-offset player-animation-offset] (. game-state
-                                                                    :animate-transition)
+            [direction animation-offset] (. game-state :animate-transition)
+            should-move-player true
             next-offset (math.max 0 (- animation-offset animate-speed))]
         (if (= 0 next-offset)
             (do
@@ -155,17 +153,21 @@
             (do
               (tset game-state :animate-transition [direction next-offset])
               (if (= :left direction)
-                  (tset player-state :x
-                        (+ (. player-state :x) player-animate-speed))
+                  (do
+                    (tset player-state :x (+ (. player-state :x) animate-speed))
+                    (tset player-state :to-x (. player-state :x)))
                   (= :right direction)
-                  (tset player-state :x
-                        (- (. player-state :x) player-animate-speed))
+                  (do
+                    (tset player-state :x (- (. player-state :x) animate-speed))
+                    (tset player-state :tox (. player-state :x)))
                   (= :up direction)
-                  (tset player-state :y
-                        (+ (. player-state :y) player-animate-speed))
+                  (do
+                    (tset player-state :y (+ (. player-state :y) animate-speed))
+                    (tset player-state :to-y (. player-state :y)))
                   (= :down direction)
-                  (tset player-state :y
-                        (- (. player-state :y) player-animate-speed))))))))
+                  (do
+                    (tset player-state :y (- (. player-state :y) animate-speed))
+                    (tset player-state :to-y (. player-state :y)))))))))
 
 (fn love.keypressed [key]
   (do

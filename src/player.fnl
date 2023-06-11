@@ -43,13 +43,15 @@
                      :shove-delta-x 0
                      :shove-delta-y 0
                      :shove-delta-per-frame 0
+                     :x-draw-offset -64
+                     :y-draw-offset -64
                      :x 256
                      :to-x 256
                      :y 256
                      :to-y 256
+                     :width 64
+                     :height 64
                      :zoom-mod (/ 64 92)
-                     :width 16
-                     :height 16
                      :action {:name :idle
                               :animating true
                               :frame-delta 0

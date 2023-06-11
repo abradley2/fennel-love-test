@@ -50,9 +50,9 @@
                              (if draw
                                  (let [[sprite quad] (. entity :draw)]
                                    (love.graphics.draw sprite quad
-                                                       (-> (. entity :x)
+                                                       (-> (+ (. entity :x) (or (. entity :x-draw-offset) 0))
                                                            (* CAMERA-ZOOM))
-                                                       (-> (. entity :y)
+                                                       (-> (+ (. entity :y) (or (. entity :y-draw-offset) 0))
                                                            (* CAMERA-ZOOM))
                                                        0
                                                        (* CAMERA-ZOOM

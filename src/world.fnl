@@ -94,6 +94,12 @@
               (tset attrs :display-y (* (. attrs :y) CAMERA-ZOOM))
               attrs))))))
 
+(fn partition-layers [layers]
+  (accumulate [acc {:draw []} _ layer (ipairs layers)]
+    (if (= nil (tonumber (. layer :name)))
+        (table.insert acc (. layer :name) layer)
+        (-> (. acc :draw) (table.insert layer)))))
+
 (fn read-tiled-map [map-file]
   (let [map-fh (io.open (.. :./src/map/ map-file))
         map-json (map-fh:read :*all)

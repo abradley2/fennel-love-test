@@ -54,8 +54,8 @@
                      :action {:name :idle
                               :animating true
                               :frame-delta 0
-                              :frames-per-quad 16}
-                     :speed 3
+                              :frames-per-quad 8}
+                     :speed 1.5
                      : quad-sets
                      :draw [player-sprite-sheet
                             (-> (. quad-sets :down)

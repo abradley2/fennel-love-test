@@ -7,10 +7,11 @@
 (local shove (require :systems.shove))
 (local movement (require :systems.movement))
 (local map_50_50 (require :map.map_50_50))
+(local map_50_51 (require :map.map_50_51))
 
 (local player-state (. player :player-state))
 
-(local map-logic {:map_50_50.json map_50_50})
+(local map-logic {:map_50_50.json map_50_50 :map_50_51.json map_50_51})
 
 ; (love.window.setMode 512 512 {:resizable false})
 (love.window.setMode 768 768 {:resizable true})
@@ -89,10 +90,10 @@
         system (. map-logic area-name)] ; add to world ; TODO - Add collisions layers
     (movement.init ecs-world [])
     (tset area :sprite-batch-groups
-          (icollect [_ layer (ipairs layers)]
+          (icollect [_ layer (ipairs (. layers :draw))]
             (world.create-sprite-batches layer)))
     (tset area :area-systems system)
-    (-?> system (. :init) (#($1 ecs-world area))))
+    (-?> system (. :init) (#($1 ecs-world layers))))
   area)
 
 (set-area :map_50_50.json)

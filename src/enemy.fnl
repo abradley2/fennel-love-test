@@ -1,7 +1,5 @@
 (local torch-red-sprite-sheet (love.graphics.newImage :assets/Torch_Red.png))
 
-(local torch-red-tile-id 1)
-
 (fn offset-pairs-to-quads [sprite-sheet offset-pairs]
   (icollect [_ [x y] (ipairs offset-pairs)]
     (love.graphics.newQuad x y 192 192 (: sprite-sheet :getDimensions))))
@@ -31,7 +29,7 @@
                :shove-delta-y 0
                :shove-delta-per-frame 0
                :facing :up
-               :action {:name :idle :frames-per-quad 20 :animating true}
+               :action {:name :idle :frames-per-quad 6 :animating true}
                :quad-sets torch-red-quad-sets
                :draw nil}]
     (tset attrs :draw [torch-red-sprite-sheet
@@ -41,4 +39,8 @@
                            (. 1))])
     attrs))
 
-{: init-torch-red : torch-red-tile-id}
+(fn enemy-from-tile [tile]
+  (if (= (. tile :original-tile-id) 1)
+      (init-torch-red (. tile :x) (. tile :y))))
+
+{: enemy-from-tile}

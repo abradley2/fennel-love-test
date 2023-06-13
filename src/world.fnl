@@ -84,21 +84,23 @@
                          : tile-id
                          :original-tile-id (. quad :original-tile-id)
                          ; it seems _REALLY OFF_ that I need to apply this offset to y after layer zoom
-                         :x (* col-zidx (. quad :width) (/ layer-zoom))
-                         :y (- (* row-zidx (. quad :height) (/ layer-zoom))
+                         :x (+ (* col-zidx (. quad :width) (/ layer-zoom))
                                (- (. quad :width) (. map-data :tilewidth)))
-                         :width 16
-                         :height 16
+                         :y (* row-zidx (. quad :height) (/ layer-zoom))
+                         :width (. quad :width)
+                         :height (. quad :height)
                          :visible (. layer :visible)}]
               (tset attrs :display-x (* (. attrs :x) CAMERA-ZOOM))
               (tset attrs :display-y (* (. attrs :y) CAMERA-ZOOM))
               attrs))))))
 
 (fn partition-layers [layers]
-  (accumulate [acc {:draw []} _ layer (ipairs layers)]
-    (if (= nil (tonumber (. layer :name)))
-        (table.insert acc (. layer :name) layer)
-        (-> (. acc :draw) (table.insert layer)))))
+  (accumulate [acc {:draw []} _idx layer (ipairs layers)]
+    (do
+      (if (= nil (tonumber (. layer :name)))
+          (tset acc (. layer :name) layer)
+          (-> (. acc :draw) (table.insert layer)))
+      acc)))
 
 (fn read-tiled-map [map-file]
   (let [map-fh (io.open (.. :./src/map/ map-file))
@@ -108,7 +110,7 @@
         tile-width (. map-data :tilewidth)
         width (. map-data :width)
         height (. map-data :height)
-        layers (. map-data :layers)
+        layers (-> (. map-data :layers) partition-layers)
         tilesets (. map-data :tilesets)]
     (map-fh:close)
     (-> (icollect [_k tileset-metadata (ipairs tilesets)]
@@ -119,7 +121,11 @@
                 tileset-data (json.decode tileset-json)]
             (get-quad-table first-gid tileset-data)))
         (merge-tables)
-        (create-layers layers map-data))))
+        ((fn [quad-map]
+           {:draw (create-layers quad-map (. layers :draw) map-data)
+            :Enemy_Spawn (-> (create-layers quad-map [(. layers :Enemy_Spawn)]
+                                            map-data)
+                             (. 1))})))))
 
 ; (do (local world (require :src.world)) (world.read-tiled-map :map_50_50.json))
 ; (do (local world (require :src.world)) (-> (world.read-tiled-map :map_50_50.json) (. 2) ) )

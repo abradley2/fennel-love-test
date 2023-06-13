@@ -14,7 +14,9 @@
 (fn un-halt-entity [entity]
   (if (and (not= nil (. entity :original-speed))
            (not= 0 (. entity :original-speed)))
-      (tset entity :speed (. entity :original-speed))
+      (do
+        (tset entity :shove-delta-per-frame 0)
+        (tset entity :speed (. entity :original-speed)))
       nil))
 
 (fn process-shove-system [_system entity [draw delta]]

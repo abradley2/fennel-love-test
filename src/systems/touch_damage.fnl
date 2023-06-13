@@ -6,6 +6,32 @@
 
 (local touch-damage-system (ecs.processingSystem))
 
+(fn reverse [direction]
+  (case direction
+    :up
+    :down
+    :down
+    :up
+    :left
+    :right
+    :right
+    :left))
+
+(fn get-shove-direction [entity player]
+  (let [entity-facing (. entity :facing)
+        entity-moving (. entity :moving)
+        player-facing (. player :facing)
+        player-moving (. player :moving)]
+    (if (= entity-facing (reverse player-facing))
+        [(reverse entity-facing) (reverse player-facing)]
+        (= entity-facing player-facing)
+        [entity-facing (reverse player-facing)]
+        (= player-moving false)
+        [entity-facing (reverse entity-facing)]
+        (= entity-moving false)
+        [(reverse player-facing) player-facing]
+        [(reverse player-facing) (reverse entity-facing)])))
+
 (fn process-touch-damage-system [_system entity [draw delta]]
   (if draw nil (let [collides-with-player (util.check-collision (. entity :x)
                                                                 (. entity :y) 32

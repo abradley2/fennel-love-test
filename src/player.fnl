@@ -13,36 +13,41 @@
                                (player-sprite-sheet-flipped:getDimensions)
                                (player-sprite-sheet:getDimensions)))))
 
-(local quad-sets {:idle (offset-pairs-to-quads [[0 0]
-                                                [192 0]
-                                                [384 0]
-                                                [768 0]
-                                                [960 0]])
-                  :up (offset-pairs-to-quads [[0 192]
-                                              [192 192]
-                                              [384 192]
-                                              [567 192]
-                                              [768 192]
-                                              [960 192]])
-                  :down (offset-pairs-to-quads [[0 192]
-                                                [192 192]
-                                                [384 192]
-                                                [567 192]
-                                                [768 192]
-                                                [960 192]])
-                  :left (offset-pairs-to-quads [[0 192]
-                                                [192 192]
-                                                [384 192]
-                                                [567 192]
-                                                [768 192]
-                                                [960 192]]
-                                               true)
-                  :right (offset-pairs-to-quads [[0 192]
-                                                 [192 192]
-                                                 [384 192]
-                                                 [567 192]
-                                                 [768 192]
-                                                 [960 192]])})
+(local quad-sets
+       {:idle (offset-pairs-to-quads [[0 0] [192 0] [384 0] [768 0] [960 0]])
+        :up (offset-pairs-to-quads [[0 192]
+                                    [192 192]
+                                    [384 192]
+                                    [567 192]
+                                    [768 192]
+                                    [960 192]])
+        :down (offset-pairs-to-quads [[0 192]
+                                      [192 192]
+                                      [384 192]
+                                      [567 192]
+                                      [768 192]
+                                      [960 192]])
+        :left (offset-pairs-to-quads [[0 192]
+                                      [192 192]
+                                      [384 192]
+                                      [567 192]
+                                      [768 192]
+                                      [960 192]])
+        :right (offset-pairs-to-quads [[0 192]
+                                       [192 192]
+                                       [384 192]
+                                       [567 192]
+                                       [768 192]
+                                       [960 192]])
+        :attack-left (offset-pairs-to-quads [[960 384]
+                                             [768 384]
+                                             [576 384]
+                                             [384 384]
+                                             [192 384]
+                                             [768 576]
+                                             [567 567]
+                                             [384 567]
+                                             [192 567]])})
 
 (local player-state {:player-entity true
                      :shove-delta-x 0
@@ -63,7 +68,7 @@
                               :animating true
                               :frame-delta 0
                               :frames-per-quad 8}
-                     :speed 1.5
+                     :speed 4
                      : quad-sets
                      :draw [player-sprite-sheet
                             (-> (. quad-sets :down)
@@ -100,7 +105,14 @@
     :space
     (if (-> player-state (. :action) (. :name) (= :attack))
         nil
-        (print "PERFORM ATTACK"))
+        (case (. player-state :facing)
+          :left
+          (do
+            (tset player-state :action
+                  {:name :attack-left
+                   :animating true
+                   :frame-delta 0
+                   :frames-per-quad 3}))))
     :up
     (do
       (-> player-state (. :draw) (tset 1 player-sprite-sheet))

@@ -29,6 +29,7 @@
                :shove-delta-y 0
                :shove-delta-per-frame 0
                :facing :up
+               :moving false
                :action {:name :idle :frames-per-quad 6 :animating true}
                :quad-sets torch-red-quad-sets
                :draw nil}]

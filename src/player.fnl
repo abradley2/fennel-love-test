@@ -51,6 +51,8 @@
                      :width 64
                      :height 64
                      :zoom-mod (/ 64 92)
+                     :facing :down
+                     :moving false
                      :action {:name :idle
                               :animating true
                               :frame-delta 0
@@ -66,13 +68,25 @@
     (if (-?> (. player-state :action) (. :animating))
         (case (-> (. player-state :action) (. :name))
           :up
-          (tset player-state :to-y (- (. player-state :y) speed))
+          (do
+            (tset player-state :facing :up)
+            (tset player-state :moving true)
+            (tset player-state :to-y (- (. player-state :y) speed)))
           :down
-          (tset player-state :to-y (+ (. player-state :y) speed))
+          (do
+            (tset player-state :facing :down)
+            (tset player-state :moving true)
+            (tset player-state :to-y (+ (. player-state :y) speed)))
           :left
-          (tset player-state :to-x (- (. player-state :x) speed))
+          (do
+            (tset player-state :facing :left)
+            (tset player-state :moving true)
+            (tset player-state :to-x (- (. player-state :x) speed)))
           :right
-          (tset player-state :to-x (+ (. player-state :x) speed)))
+          (do
+            (tset player-state :facing :right)
+            (tset player-state :moving true)
+            (tset player-state :to-x (+ (. player-state :x) speed))))
         nil)))
 
 (fn on-key-pressed [player-state key]
@@ -103,6 +117,7 @@
           (or (when (. keyboard :left) (on-key-pressed :left)))
           (or (when (. keyboard :right) (on-key-pressed :right))))
       (do
+        (tset player-state :moving false)
         (-> (. player-state :action) (tset :animating true))
         (-> (. player-state :action) (tset :name :idle))
         (-> (. player-state :action) (tset :frame-delta 0)))))

@@ -14,8 +14,8 @@
 (local map-logic {:map_50_50.json map_50_50 :map_50_51.json map_50_51})
 
 ; (love.window.setMode 512 512 {:resizable false})
-(love.window.setMode 768 768 {:resizable true})
-; (love.window.setMode 1024 1024 {:resizable false})
+; (love.window.setMode 768 768 {:resizable true})
+(love.window.setMode 1024 1024 {:resizable false})
 
 (love.graphics.setDefaultFilter :nearest)
 

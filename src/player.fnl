@@ -1,12 +1,17 @@
 (local util (require :util))
 
 (local player-sprite-sheet (love.graphics.newImage :assets/Warrior_Blue.png))
+(local player-sprite-sheet-flipped
+       (love.graphics.newImage :assets/Warrior_Blue_Flipped.png))
 
 (local player-tile-size 64)
 
-(fn offset-pairs-to-quads [offset-pairs]
+(fn offset-pairs-to-quads [offset-pairs flipped]
   (icollect [_ [x y] (ipairs offset-pairs)]
-    (love.graphics.newQuad x y 192 192 (player-sprite-sheet:getDimensions))))
+    (love.graphics.newQuad x y 192 192
+                           (if (= true flipped)
+                               (player-sprite-sheet-flipped:getDimensions)
+                               (player-sprite-sheet:getDimensions)))))
 
 (local quad-sets {:idle (offset-pairs-to-quads [[0 0]
                                                 [192 0]
@@ -30,7 +35,8 @@
                                                 [384 192]
                                                 [567 192]
                                                 [768 192]
-                                                [960 192]])
+                                                [960 192]]
+                                               true)
                   :right (offset-pairs-to-quads [[0 192]
                                                  [192 192]
                                                  [384 192]
@@ -91,18 +97,30 @@
 
 (fn on-key-pressed [player-state key]
   (case key
+    :space
+    (if (-> player-state (. :action) (. :name) (= :attack))
+        nil
+        (print "PERFORM ATTACK"))
     :up
-    (tset player-state :action
-          {:name :up :animating true :frame-delta 9 :frames-per-quad 8})
+    (do
+      (-> player-state (. :draw) (tset 1 player-sprite-sheet))
+      (tset player-state :action
+            {:name :up :animating true :frame-delta 9 :frames-per-quad 8}))
     :down
-    (tset player-state :action
-          {:name :down :animating true :frame-delta 9 :frames-per-quad 8})
+    (do
+      (-> player-state (. :draw) (tset 1 player-sprite-sheet-flipped))
+      (tset player-state :action
+            {:name :down :animating true :frame-delta 9 :frames-per-quad 8}))
     :left
-    (tset player-state :action
-          {:name :left :animating true :frame-delta 9 :frames-per-quad 8})
+    (do
+      (-> player-state (. :draw) (tset 1 player-sprite-sheet-flipped))
+      (tset player-state :action
+            {:name :left :animating true :frame-delta 9 :frames-per-quad 8}))
     :right
-    (tset player-state :action
-          {:name :right :animating true :frame-delta 9 :frames-per-quad 8}))
+    (do
+      (-> player-state (. :draw) (tset 1 player-sprite-sheet))
+      (tset player-state :action
+            {:name :right :animating true :frame-delta 9 :frames-per-quad 8})))
   player-state)
 
 (fn on-key-released [player-state keyboard key]

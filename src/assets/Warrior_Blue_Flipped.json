@@ -1,0 +1,15 @@
+{ "columns":6,
+ "image":"Warrior_Blue_Flipped.png",
+ "imageheight":1536,
+ "imagewidth":1152,
+ "margin":0,
+ "name":"Warrior_Blue_Flipped",
+ "spacing":0,
+ "tilecount":48,
+ "tiledversion":"1.10.1",
+ "tileheight":192,
+ "tilewidth":192,
+ "transparentcolor":"#ff00ff",
+ "type":"tileset",
+ "version":"1.10"
+}

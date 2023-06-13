@@ -22,7 +22,6 @@
         entity-moving (. entity :moving)
         player-facing (. player :facing)
         player-moving (. player :moving)]
-    (print entity-facing player-facing)
     (if (= player-moving false)
         [entity-facing (reverse entity-facing)]
         (= entity-moving false)

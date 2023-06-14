@@ -2,11 +2,13 @@
 
 (local system (ecs.processingSystem))
 
-(fn choose-sprite-quad [sprite-quads delta frames-per-quad]
+(fn choose-sprite-quad [sprite-quads delta frames-per-quad action-data]
   (let [cur-frame (+ 1 (math.floor (/ delta frames-per-quad)))]
     (if (. sprite-quads cur-frame)
         [(. sprite-quads cur-frame) delta]
-        (choose-sprite-quad sprite-quads 0 frames-per-quad))))
+        (do
+          (tset action-data :completed-loop true)
+          (choose-sprite-quad sprite-quads 0 frames-per-quad action-data)))))
 
 (fn system-process [_ entity [love-draw delta]]
   (if love-draw nil
@@ -20,7 +22,8 @@
             [sprite-sheet _] (. entity :draw)
             [sprite-quad next-frame-delta] (choose-sprite-quad quad-sets
                                                                frame-delta
-                                                               frames-per-quad)]
+                                                               frames-per-quad
+                                                               action)]
         (tset action :frame-delta next-frame-delta)
         (tset entity :draw [sprite-sheet sprite-quad]))))
 

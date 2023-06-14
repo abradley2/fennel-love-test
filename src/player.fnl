@@ -64,11 +64,13 @@
                      :zoom-mod (/ 64 92)
                      :facing :down
                      :moving false
+                     :attacking false
                      :action {:name :idle
                               :animating true
                               :frame-delta 0
                               :frames-per-quad 8}
                      :speed 4
+                     :sword-attack nil
                      : quad-sets
                      :draw [player-sprite-sheet
                             (-> (. quad-sets :down)
@@ -76,6 +78,13 @@
 
 (fn on-update [delta player-state keyboard area]
   (let [speed (* (. player-state :speed) delta)]
+    (when (-> (. player-state :action) (. :completed-loop))
+      (when (-> (. player-state :action) (. :prev-action))
+        (do
+          (tset player-state :action
+                (-> (. player-state :action) (. :prev-action)))
+          (tset player-state :attacking false)
+          (tset player-state :moving false))))
     (if (-?> (. player-state :action) (. :animating))
         (case (-> (. player-state :action) (. :name))
           :up
@@ -108,31 +117,37 @@
         (case (. player-state :facing)
           :left
           (do
+            (tset player-state :attacking true)
             (tset player-state :action
                   {:name :attack-left
                    :animating true
                    :frame-delta 0
-                   :frames-per-quad 3}))))
+                   :frames-per-quad 3
+                   :prev-action (. player-state :action)}))))
     :up
     (do
       (-> player-state (. :draw) (tset 1 player-sprite-sheet))
-      (tset player-state :action
-            {:name :up :animating true :frame-delta 9 :frames-per-quad 8}))
+      (when (not (. player-state :attacking))
+        (tset player-state :action
+              {:name :up :animating true :frame-delta 9 :frames-per-quad 8})))
     :down
     (do
       (-> player-state (. :draw) (tset 1 player-sprite-sheet-flipped))
-      (tset player-state :action
-            {:name :down :animating true :frame-delta 9 :frames-per-quad 8}))
+      (when (not (. player-state :attacking))
+        (tset player-state :action
+              {:name :down :animating true :frame-delta 9 :frames-per-quad 8})))
     :left
     (do
       (-> player-state (. :draw) (tset 1 player-sprite-sheet-flipped))
-      (tset player-state :action
-            {:name :left :animating true :frame-delta 9 :frames-per-quad 8}))
+      (when (not (. player-state :attacking))
+        (tset player-state :action
+              {:name :left :animating true :frame-delta 9 :frames-per-quad 8})))
     :right
     (do
       (-> player-state (. :draw) (tset 1 player-sprite-sheet))
-      (tset player-state :action
-            {:name :right :animating true :frame-delta 9 :frames-per-quad 8})))
+      (when (not (. player-state :attacking))
+        (tset player-state :action
+              {:name :right :animating true :frame-delta 9 :frames-per-quad 8}))))
   player-state)
 
 (fn on-key-released [player-state keyboard key]
@@ -146,10 +161,11 @@
           (or (when (. keyboard :down) (on-key-pressed :down)))
           (or (when (. keyboard :left) (on-key-pressed :left)))
           (or (when (. keyboard :right) (on-key-pressed :right))))
-      (do
-        (tset player-state :moving false)
-        (-> (. player-state :action) (tset :animating true))
-        (-> (. player-state :action) (tset :name :idle))
-        (-> (. player-state :action) (tset :frame-delta 0)))))
+      (when (not (. player-state :attacking))
+        (do
+          (tset player-state :moving false)
+          (-> (. player-state :action) (tset :animating true))
+          (-> (. player-state :action) (tset :name :idle))
+          (-> (. player-state :action) (tset :frame-delta 0))))))
 
 {: player-state : on-update : on-key-pressed : on-key-released}

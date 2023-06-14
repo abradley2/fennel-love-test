@@ -45,11 +45,21 @@
         (tset entity :to-y (. entity :y))))
     nil))
 
+(fn with-collision-offset [collision-box entity]
+  {:to-x (-> (. entity :to-x) (+ (. collision-box :x-offset)))
+   :to-y (-> (. entity :to-y) (+ (. collision-box :y-offset)))
+   :width (. collision-box :width)
+   :height (. collision-box :height)})
+
+(fn get-collision-box [entity]
+  (or (-?> (. entity :collision-box) (with-collision-offset entity)) entity))
+
 (fn check-movement [entity area tile-idx?]
   (let [tile-idx (or tile-idx? 1)
         tile (. area tile-idx)]
     (if (not= nil tile)
-        (let [does-collide (check-collision entity tile)]
+        (let [collision-box (get-collision-box entity)
+              does-collide (check-collision collision-box tile)]
           (if does-collide
               (adjust-entity entity tile)
               (check-movement entity area (+ tile-idx 1))))
@@ -79,4 +89,4 @@
 (fn deinit [world]
   (ecs.removeSystem world area-movement-system))
 
-{: init : deinit}
+{: init : deinit : get-collision-box}

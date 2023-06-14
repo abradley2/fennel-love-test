@@ -55,10 +55,10 @@
                      :shove-delta-per-frame 0
                      :x-draw-offset -64
                      :y-draw-offset -64
-                     :x 256
-                     :to-x 256
-                     :y 256
-                     :to-y 256
+                     :x 800
+                     :to-x 800
+                     :y 900
+                     :to-y 900
                      :width 64
                      :height 64
                      :zoom-mod (/ 64 92)

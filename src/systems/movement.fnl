@@ -7,11 +7,7 @@
 
 (fn area-to-collisions [area-tiles]
   (accumulate [collision-tiles [] _ area-tile (pairs area-tiles)]
-    (let [should-check-collision (-> true
-                                     (and (not= (. area-tile :original-tile-id)
-                                                1))
-                                     (and (not= (. area-tile :original-tile-id)
-                                                10)))]
+    (let [should-check-collision true]
       (if should-check-collision
           (table.insert collision-tiles area-tile)
           nil)

@@ -125,7 +125,10 @@
            {:draw (create-layers quad-map (. layers :draw) map-data)
             :Enemy_Spawn (-> (create-layers quad-map [(. layers :Enemy_Spawn)]
                                             map-data)
-                             (. 1))})))))
+                             (. 1))
+            :Collision (-> (create-layers quad-map [(. layers :Collision)]
+                                          map-data)
+                           (. 1))})))))
 
 ; (do (local world (require :src.world)) (world.read-tiled-map :map_50_50.json))
 ; (do (local world (require :src.world)) (-> (world.read-tiled-map :map_50_50.json) (. 2) ) )

@@ -88,7 +88,7 @@
       nil)
   (let [layers (world.read-tiled-map area-name)
         system (. map-logic area-name)] ; add to world ; TODO - Add collisions layers
-    (movement.init ecs-world [])
+    (movement.init ecs-world (. layers :Collision))
     (tset area :sprite-batch-groups
           (icollect [_ layer (ipairs (. layers :draw))]
             (world.create-sprite-batches layer)))

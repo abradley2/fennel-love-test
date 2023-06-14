@@ -33,34 +33,36 @@
         [(reverse player-facing) (reverse entity-facing)])))
 
 (fn shove-entity [direction entity]
-  (tset entity :shove-delta-per-frame 4)
-  (case direction
-    :left
-    (tset entity :shove-delta-x 32)
-    :right
-    (tset entity :shove-delta-x -32)
-    :up
-    (tset entity :shove-delta-y 32)
-    :down
-    (tset entity :shove-delta-y -32)))
+  (when (not= false (. entity :shovable))
+    (do
+      (tset entity :shove-delta-per-frame 4)
+      (case direction
+        :left
+        (tset entity :shove-delta-x 32)
+        :right
+        (tset entity :shove-delta-x -32)
+        :up
+        (tset entity :shove-delta-y 32)
+        :down
+        (tset entity :shove-delta-y -32)))))
+
+(fn -process-touch-damage-system [entity-bar entity-foo]
+  (let [does-collide (util.check-collision (. entity-foo :x) (. entity-foo :y)
+                                           32 32 (. entity-bar :x)
+                                           (. entity-bar :y) 32 32)]
+    (if (-> does-collide
+            (and (= 0 (. entity-bar :shove-delta-per-frame)))
+            (and (= 0 (. entity-bar :shove-delta-per-frame))))
+        (let [[entity-bar-shove-direction entity-foo-shove-direction] (get-shove-direction entity-bar
+                                                                                           entity-foo)]
+          (shove-entity entity-bar-shove-direction entity-bar)
+          (shove-entity entity-foo-shove-direction entity-foo))
+        nil)))
 
 (fn process-touch-damage-system [_system entity [draw delta]]
-  (if draw nil (let [collides-with-player (util.check-collision (. entity :x)
-                                                                (. entity :y) 32
-                                                                32
-                                                                (. player-state
-                                                                   :x)
-                                                                (. player-state
-                                                                   :y)
-                                                                32 32)]
-                 (if (-> collides-with-player
-                         (and (= 0 (. player-state :shove-delta-per-frame)))
-                         (and (= 0 (. player-state :shove-delta-per-frame))))
-                     (let [[player-shove-direction entity-shove-direction] (get-shove-direction player-state
-                                                                                                entity)]
-                       (shove-entity player-shove-direction player-state)
-                       (shove-entity entity-shove-direction entity))
-                     nil))))
+  (if draw nil
+      (do
+        (-process-touch-damage-system player-state entity))))
 
 (tset touch-damage-system :filter (ecs.requireAll :touch-damage :facing :x :y))
 (tset touch-damage-system :process process-touch-damage-system)

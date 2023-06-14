@@ -21,6 +21,10 @@
                :to-y y
                :width 64
                :height 64
+               :collision-box {:x-offset -32
+                               :y-offset -32
+                               :width 64
+                               :height 64}
                :zoom-mod (/ 64 92)
                :x-draw-offset -64
                :y-draw-offset -64

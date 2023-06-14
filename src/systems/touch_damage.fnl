@@ -1,6 +1,7 @@
 (local ecs (require :lib.ecs))
 (local player (require :player))
 (local util (require :util))
+(local movement (require :systems.movement))
 
 (local player-state (. player :player-state))
 
@@ -47,9 +48,16 @@
         (tset entity :shove-delta-y -32)))))
 
 (fn -process-touch-damage-system [entity-bar entity-foo]
-  (let [does-collide (util.check-collision (. entity-foo :x) (. entity-foo :y)
-                                           32 32 (. entity-bar :x)
-                                           (. entity-bar :y) 32 32)]
+  (let [entity-bar-box (movement.get-collision-box entity-bar)
+        entity-foo-box (movement.get-collision-box entity-foo)
+        does-collide (util.check-collision (. entity-foo-box :x)
+                                           (. entity-foo-box :y)
+                                           (. entity-foo-box :width)
+                                           (. entity-foo-box :height)
+                                           (. entity-bar-box :x)
+                                           (. entity-bar-box :y)
+                                           (. entity-bar-box :width)
+                                           (. entity-bar-box :height))]
     (if (-> does-collide
             (and (= 0 (. entity-bar :shove-delta-per-frame)))
             (and (= 0 (. entity-bar :shove-delta-per-frame))))

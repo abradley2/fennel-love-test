@@ -14,8 +14,8 @@
 (local map-logic {:map_50_50.json map_50_50 :map_50_51.json map_50_51})
 
 ; (love.window.setMode 512 512 {:resizable false})
-(love.window.setMode 768 768 {:resizable false})
-; (love.window.setMode 1024 1024 {:resizable false})
+; (love.window.setMode 768 768 {:resizable false})
+(love.window.setMode 1024 1024 {:resizable false})
 
 (love.graphics.setDefaultFilter :nearest)
 
@@ -50,7 +50,8 @@
 
 (tset draw-system :process (fn [_ entity [draw _]]
                              (if draw
-                                 (let [[sprite quad] (. entity :draw)]
+                                 (let [[sprite quad] (. entity :draw)
+                                       collision-box (movement.get-collision-box entity)]
                                    (love.graphics.draw sprite quad
                                                        (-> (+ (. entity :x)
                                                               (or (. entity
@@ -66,7 +67,20 @@
                                                        (* CAMERA-ZOOM
                                                           (or (. entity
                                                                  :zoom-mod)
-                                                              1))))
+                                                              1)))
+                                   (love.graphics.rectangle :line
+                                                            (* (. collision-box
+                                                                  :to-x)
+                                                               CAMERA-ZOOM)
+                                                            (* (. collision-box
+                                                                  :to-y)
+                                                               CAMERA-ZOOM)
+                                                            (* (. collision-box
+                                                                  :width)
+                                                               CAMERA-ZOOM)
+                                                            (* (. collision-box
+                                                                  :height)
+                                                               CAMERA-ZOOM)))
                                  nil)))
 
 (tset draw-system :filter (ecs.requireAll :draw))
@@ -193,16 +207,7 @@
             (love.graphics.draw sprite-batch) ; draw a rectangle to show the players real hitbox position ; love.graphics.rectangle( mode, x, y, width, height, rx, ry, segments )
             ))
         (love.graphics.print (love.timer.getFPS) 10 10)
-        (love.graphics.setColor 255 255 255)
-        (love.graphics.rectangle :fill
-                                 (* (+ (. player-state :x)
-                                       (/ (. player-state :x-draw-offset) 2))
-                                    CAMERA-ZOOM)
-                                 (* (+ (. player-state :y)
-                                       (/ (. player-state :y-draw-offset) 2))
-                                    CAMERA-ZOOM)
-                                 (* (. player-state :width) CAMERA-ZOOM)
-                                 (* (. player-state :height) CAMERA-ZOOM)))
+        (love.graphics.setColor 255 255 255))
       (let [[direction offset] (. game-state :animate-transition)
             entering-x-offset (if (= :left direction)
                                   (* (* offset CAMERA-ZOOM) -1)

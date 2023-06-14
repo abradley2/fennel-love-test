@@ -55,10 +55,10 @@
                      :shove-delta-per-frame 0
                      :x-draw-offset -64
                      :y-draw-offset -64
-                     :collision-box {:x-offset -32
-                                     :y-offset -32
+                     :collision-box {:x-offset -16
+                                     :y-offset -8
                                      :width 32
-                                     :height 32}
+                                     :height 40}
                      :x 800
                      :to-x 800
                      :y 900

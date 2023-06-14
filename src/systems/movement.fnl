@@ -5,6 +5,19 @@
 
 (local movement-system (ecs.processingSystem))
 
+(fn with-collision-offset [collision-box entity]
+  {:to-x (-> (. entity :to-x) (+ (. collision-box :x-offset)))
+   :x (-> (. entity :to-x) (+ (. collision-box :x-offset)))
+   :y (-> (. entity :to-y) (+ (. collision-box :y-offset)))
+   :to-y (-> (. entity :to-y) (+ (. collision-box :y-offset)))
+   :x-offset (. collision-box :x-offset)
+   :y-offset (. collision-box :y-offset)
+   :width (. collision-box :width)
+   :height (. collision-box :height)})
+
+(fn get-collision-box [entity]
+  (or (-?> (. entity :collision-box) (with-collision-offset entity)) entity))
+
 (fn area-to-collisions [area-tiles]
   (accumulate [collision-tiles [] _ area-tile (pairs area-tiles)]
     (let [should-check-collision true]
@@ -25,34 +38,34 @@
       (< (. entity :y) (. entity :to-y)) :down))
 
 (fn adjust-entity [entity border-tile]
-  (let [direction (get-direction entity)]
+  (let [direction (get-direction entity)
+        collision-box (get-collision-box entity)]
     (case direction
       :right
-      (do
-        (tset entity :x (-> (. border-tile :x) (- (. entity :width)) (- 1)))
+      (let []
+        (tset entity :x
+              (-> (. border-tile :x) (- (. collision-box :width))
+                  (- (. collision-box :x-offset)) (- 1)))
         (tset entity :to-x (. entity :x)))
       :left
-      (do
-        (tset entity :x (-> (. border-tile :x) (+ (. entity :width)) (+ 1)))
+      (let []
+        (tset entity :x
+              (-> (. border-tile :x) (+ (. collision-box :width))
+                  (- (. collision-box :x-offset)) (+ 1)))
         (tset entity :to-x (. entity :x)))
       :up
-      (do
-        (tset entity :y (-> (. border-tile :y) (+ (. entity :height)) (+ 1)))
+      (let []
+        (tset entity :y
+              (-> (. border-tile :y) (+ (. collision-box :height))
+                  (- (. collision-box :y-offset)) (+ 1)))
         (tset entity :to-y (. entity :y)))
       :down
-      (do
-        (tset entity :y (-> (. border-tile :y) (- (. entity :height)) (- 1)))
+      (let []
+        (tset entity :y
+              (-> (. border-tile :y) (- (. collision-box :height))
+                  (- (. collision-box :y-offset)) (- 1)))
         (tset entity :to-y (. entity :y))))
     nil))
-
-(fn with-collision-offset [collision-box entity]
-  {:to-x (-> (. entity :to-x) (+ (. collision-box :x-offset)))
-   :to-y (-> (. entity :to-y) (+ (. collision-box :y-offset)))
-   :width (. collision-box :width)
-   :height (. collision-box :height)})
-
-(fn get-collision-box [entity]
-  (or (-?> (. entity :collision-box) (with-collision-offset entity)) entity))
 
 (fn check-movement [entity area tile-idx?]
   (let [tile-idx (or tile-idx? 1)

@@ -49,14 +49,14 @@
         (tset entity :to-x (. entity :x)))
       :left
       (let []
-        (tset entity :x
-              (-> (. border-tile :x) (+ (. collision-box :width))
-                  (- (. collision-box :x-offset)) (+ 1)))
+        (tset entity :x (-> (+ (. border-tile :x) (. border-tile :width))
+                            (- (. collision-box :x-offset))
+                            (+ 1)))
         (tset entity :to-x (. entity :x)))
       :up
       (let []
         (tset entity :y
-              (-> (. border-tile :y) (+ (. collision-box :height))
+              (-> (. border-tile :y) (+ (. border-tile :height))
                   (- (. collision-box :y-offset)) (+ 1)))
         (tset entity :to-y (. entity :y)))
       :down

@@ -189,7 +189,8 @@
   (if (= nil (. game-state :leaving-area))
       (each [_k sprite-batch-group (ipairs (. area :sprite-batch-groups))]
         (each [_ sprite-batch (pairs sprite-batch-group)]
-          (love.graphics.draw sprite-batch)))
+          (love.graphics.draw sprite-batch)
+          (love.graphics.print (love.timer.getFPS) 10 10)))
       (let [[direction offset] (. game-state :animate-transition)
             entering-x-offset (if (= :left direction)
                                   (* (* offset CAMERA-ZOOM) -1)

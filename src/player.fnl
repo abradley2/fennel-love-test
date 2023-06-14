@@ -65,6 +65,7 @@
                      :facing :down
                      :moving false
                      :attacking false
+                     :sword-attack nil
                      :action {:name :idle
                               :animating true
                               :frame-delta 0
@@ -84,6 +85,7 @@
           (tset player-state :action
                 (-> (. player-state :action) (. :prev-action)))
           (tset player-state :attacking false)
+          (tset player-state :sword-attack nil)
           (tset player-state :moving false))))
     (if (-?> (. player-state :action) (. :animating))
         (case (-> (. player-state :action) (. :name))
@@ -118,6 +120,16 @@
           :left
           (do
             (tset player-state :attacking true)
+            (tset player-state :sword-attack
+                  {:x (-> (. player-state :x) (- 48))
+                   :y (-> (. player-state :y) (- 48))
+                   :width 48
+                   :height 48
+                   :shove-delta-x 0
+                   :shove-delta-y 0
+                   :facing :left
+                   :moving true
+                   :shove-delta-per-frame 0})
             (tset player-state :action
                   {:name :attack-left
                    :animating true

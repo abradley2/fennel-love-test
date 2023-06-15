@@ -115,7 +115,70 @@
             (tset player-state :to-x (+ (. player-state :x) speed))))
         nil)))
 
+(local key-presses [])
+
+(fn remove-key [key]
+  (each [i key (ipairs key-presses)]
+    (when (= key :space)
+      (table.remove key-presses i))))
+
+(fn resolve-keyboard []
+  (let [key (-> key-presses (. (length key-presses)))]
+    (case key
+      :space
+      (if (-> player-state (. :action) (. :name) (= :attack))
+          nil
+          (case (. player-state :facing)
+            :left
+            (do
+              (tset player-state :attacking true)
+              (tset player-state :sword-attack
+                    {:x (-> (. player-state :x) (- 48))
+                     :y (-> (. player-state :y) (- 48))
+                     :width 48
+                     :height 48
+                     :shove-delta-x 0
+                     :shove-delta-y 0
+                     :facing :left
+                     :moving true
+                     :shove-delta-per-frame 0})
+              (tset player-state :action
+                    {:name :attack-left
+                     :animating true
+                     :frame-delta 0
+                     :frames-per-quad 3
+                     :prev-action (. player-state :action)}))))
+      :up
+      (do
+        (-> player-state (. :draw) (tset 1 player-sprite-sheet))
+        (when (not (. player-state :attacking))
+          (tset player-state :action
+                {:name :up :animating true :frame-delta 9 :frames-per-quad 8})))
+      :down
+      (do
+        (-> player-state (. :draw) (tset 1 player-sprite-sheet-flipped))
+        (when (not (. player-state :attacking))
+          (tset player-state :action
+                {:name :down :animating true :frame-delta 9 :frames-per-quad 8})))
+      :left
+      (do
+        (-> player-state (. :draw) (tset 1 player-sprite-sheet-flipped))
+        (when (not (. player-state :attacking))
+          (tset player-state :action
+                {:name :left :animating true :frame-delta 9 :frames-per-quad 8})))
+      :right
+      (do
+        (-> player-state (. :draw) (tset 1 player-sprite-sheet))
+        (when (not (. player-state :attacking))
+          (tset player-state :action
+                {:name :right
+                 :animating true
+                 :frame-delta 9
+                 :frames-per-quad 8}))))))
+
 (fn on-key-pressed [player-state key]
+  (table.insert key-presses key)
+  (when (not= nil (. key-presses 5)) (table.remove key-presses 1))
   (case key
     :space
     (if (-> player-state (. :action) (. :name) (= :attack))
@@ -167,6 +230,7 @@
   player-state)
 
 (fn on-key-released [player-state keyboard key]
+  (remove-key key)
   (if (-> false
           (or (= true (. keyboard :up)))
           (or (= true (. keyboard :down)))

@@ -116,10 +116,13 @@
 
 (local key-presses [])
 
-(fn remove-key [key]
+(fn remove-key [target]
   (each [i key (ipairs key-presses)]
-    (when (= key :space)
-      (table.remove key-presses i))))
+    (when (= target key)
+      (do 
+        (table.remove key-presses i)
+        (remove-key target)
+        ))))
 
 (fn resolve-keyboard []
   (let [key (-> key-presses (. (length key-presses)))]
@@ -230,21 +233,18 @@
 
 (fn on-key-released [player-state keyboard key]
   (remove-key key)
-  (if (-> false
-          (or (= true (. keyboard :up)))
-          (or (= true (. keyboard :down)))
-          (or (= true (. keyboard :left)))
-          (or (= true (. keyboard :right))))
-      (-> false
-          (or (when (. keyboard :up) (on-key-pressed :up)))
-          (or (when (. keyboard :down) (on-key-pressed :down)))
-          (or (when (. keyboard :left) (on-key-pressed :left)))
-          (or (when (. keyboard :right) (on-key-pressed :right))))
-      (when (not (. player-state :attacking))
-        (do
-          (tset player-state :moving false)
-          (-> (. player-state :action) (tset :animating true))
-          (-> (. player-state :action) (tset :name :idle))
-          (-> (. player-state :action) (tset :frame-delta 0))))))
+  (let [next-key (-> key-presses (. (length key-presses)))]
+    (if (-> false
+            (or (= :up next-key))
+            (or (= :down next-key))
+            (or (= :left next-key))
+            (or (= :right next-key)))
+        (on-key-pressed player-state next-key)
+        (when (not (. player-state :attacking))
+          (do
+            (tset player-state :moving false)
+            (-> (. player-state :action) (tset :animating true))
+            (-> (. player-state :action) (tset :name :idle))
+            (-> (. player-state :action) (tset :frame-delta 0)))))))
 
 {: player-state : on-update : on-key-pressed : on-key-released}

@@ -69,13 +69,12 @@
                      :facing :down
                      :moving false
                      :attacking false
-                     :sword-attack nil
+                     :attack nil
                      :action {:name :idle
                               :animating true
                               :frame-delta 0
                               :frames-per-quad 8}
                      :speed 4
-                     :sword-attack nil
                      : quad-sets
                      :draw [player-sprite-sheet
                             (-> (. quad-sets :down)
@@ -89,7 +88,7 @@
           (tset player-state :action
                 (-> (. player-state :action) (. :prev-action)))
           (tset player-state :attacking false)
-          (tset player-state :sword-attack nil)
+          (tset player-state :attack nil)
           (tset player-state :moving false))))
     (if (-?> (. player-state :action) (. :animating))
         (case (-> (. player-state :action) (. :name))
@@ -187,10 +186,10 @@
           :left
           (do
             (tset player-state :attacking true)
-            (tset player-state :sword-attack
-                  {:x (-> (. player-state :x) (- 48))
-                   :y (-> (. player-state :y) (- 48))
-                   :width 48
+            (tset player-state :attack
+                  {:x (-> (. player-state :x) (- 60))
+                   :y (-> (. player-state :y) (- 16))
+                   :width 60
                    :height 48
                    :shove-delta-x 0
                    :shove-delta-y 0

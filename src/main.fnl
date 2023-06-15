@@ -68,6 +68,24 @@
                                                           (or (. entity
                                                                  :zoom-mod)
                                                               1)))
+                                   (when (not= nil (. entity :attack))
+                                     (love.graphics.rectangle :line
+                                                              (* (. (. entity
+                                                                       :attack)
+                                                                    :x)
+                                                                 CAMERA-ZOOM)
+                                                              (* (. (. entity
+                                                                       :attack)
+                                                                    :y)
+                                                                 CAMERA-ZOOM)
+                                                              (* (. (. entity
+                                                                       :attack)
+                                                                    :width)
+                                                                 CAMERA-ZOOM)
+                                                              (* (. (. entity
+                                                                       :attack)
+                                                                    :height)
+                                                                 CAMERA-ZOOM)))
                                    (love.graphics.rectangle :line
                                                             (* (. collision-box
                                                                   :to-x)

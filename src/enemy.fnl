@@ -21,6 +21,8 @@
                :to-y y
                :width 64
                :height 64
+               :health 2
+               :flagged-for-removal false
                :collision-box {:x-offset -32
                                :y-offset -32
                                :width 64

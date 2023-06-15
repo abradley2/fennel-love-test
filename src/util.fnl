@@ -4,4 +4,9 @@
       false
       true))
 
-{: check-collision}
+(fn offset-pairs-to-quads [width height sheet]
+  (fn [offset-pairs]
+    (icollect [_ [x y] (ipairs offset-pairs)]
+      (love.graphics.newQuad x y 128 128 (sheet:getDimensions)))))
+
+{: check-collision : offset-pairs-to-quads}

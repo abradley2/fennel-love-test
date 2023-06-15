@@ -119,10 +119,9 @@
 (fn remove-key [target]
   (each [i key (ipairs key-presses)]
     (when (= target key)
-      (do 
+      (do
         (table.remove key-presses i)
-        (remove-key target)
-        ))))
+        (remove-key target)))))
 
 (fn resolve-keyboard []
   (let [key (-> key-presses (. (length key-presses)))]
@@ -134,11 +133,12 @@
             :left
             (do
               (tset player-state :attacking true)
-              (tset player-state :sword-attack
+              (tset player-state :attack
                     {:x (-> (. player-state :x) (- 48))
                      :y (-> (. player-state :y) (- 48))
                      :width 48
                      :height 48
+                     :damage 1
                      :shove-delta-x 0
                      :shove-delta-y 0
                      :facing :left
@@ -194,6 +194,7 @@
                    :y (-> (. player-state :y) (- 16))
                    :width 60
                    :height 48
+                   :damage 1
                    :shove-delta-x 0
                    :shove-delta-y 0
                    :facing :left

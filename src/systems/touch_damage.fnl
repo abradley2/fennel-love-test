@@ -63,6 +63,14 @@
             (and (= 0 (. entity-bar :shove-delta-per-frame))))
         (let [[entity-bar-shove-direction entity-foo-shove-direction] (get-shove-direction entity-bar
                                                                                            entity-foo)]
+          (when (and (not= nil (. entity-bar :health))
+                     (not= nil (. entity-foo :damage)))
+            (tset entity-bar :health
+                  (- (. entity-bar :health) (. entity-foo :damage))))
+          (when (and (not= nil (. entity-foo :health))
+                     (not= nil (. entity-bar :damage)))
+            (tset entity-foo :health
+                  (- (. entity-foo :health) (. entity-bar :damage))))
           (shove-entity entity-bar-shove-direction entity-bar)
           (shove-entity entity-foo-shove-direction entity-foo))
         nil)))

@@ -8,7 +8,9 @@
         [(. sprite-quads cur-frame) delta]
         (do
           (tset action-data :completed-loop true)
-          (choose-sprite-quad sprite-quads 0 frames-per-quad action-data)))))
+          (if (= true (. action-data :no-loop))
+              [(-> sprite-quads (. (length sprite-quads))) delta]
+              (choose-sprite-quad sprite-quads 0 frames-per-quad action-data))))))
 
 (fn system-process [_ entity [love-draw delta]]
   (if love-draw nil

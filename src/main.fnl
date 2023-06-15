@@ -6,6 +6,8 @@
 (local touch_damage (require :systems.touch_damage))
 (local shove (require :systems.shove))
 (local movement (require :systems.movement))
+(local entity_death (require :systems.entity_death))
+(local cleanup (require :systems.cleanup))
 (local map_50_50 (require :map.map_50_50))
 (local map_50_51 (require :map.map_50_51))
 
@@ -49,7 +51,9 @@
 (local draw-system (ecs.processingSystem))
 
 (tset draw-system :process (fn [_ entity [draw _]]
-                             (if draw
+                             (if (and draw
+                                      (not= true
+                                            (. entity :flagged-for-removal)))
                                  (let [[sprite quad] (. entity :draw)
                                        collision-box (movement.get-collision-box entity)]
                                    (love.graphics.draw sprite quad
@@ -109,6 +113,8 @@
 (action_animation.init ecs-world)
 (touch_damage.init ecs-world)
 (shove.init ecs-world)
+(entity_death.init ecs-world)
+(cleanup.init ecs-world)
 
 (ecs.addEntity ecs-world player-state)
 

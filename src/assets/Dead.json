@@ -1,0 +1,15 @@
+{ "columns":7,
+ "image":"Dead.png",
+ "imageheight":256,
+ "imagewidth":896,
+ "margin":0,
+ "name":"Dead",
+ "spacing":0,
+ "tilecount":14,
+ "tiledversion":"1.10.1",
+ "tileheight":128,
+ "tilewidth":128,
+ "transparentcolor":"#ff00ff",
+ "type":"tileset",
+ "version":"1.10"
+}

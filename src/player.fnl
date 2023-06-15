@@ -124,9 +124,9 @@
           (do
             (tset player-state :attacking true)
             (tset player-state :attack
-                  {:x (-> (. player-state :x) (- 48))
-                   :y (-> (. player-state :y) (- 48))
-                   :width 48
+                  {:x (-> (. player-state :x) (- 60))
+                   :y (-> (. player-state :y) (- 16))
+                   :width 60
                    :height 48
                    :shove-delta-x 0
                    :shove-delta-y 0

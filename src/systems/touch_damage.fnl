@@ -70,8 +70,8 @@
 (fn process-touch-damage-system [_system entity [draw delta]]
   (if draw nil (do
                  (-process-touch-damage-system player-state entity)
-                 (when (. player-state :sword-attack)
-                   (-process-touch-damage-system (. player-state :sword-attack)
+                 (when (. player-state :attack)
+                   (-process-touch-damage-system (. player-state :attack)
                                                  entity)))))
 
 (tset touch-damage-system :filter (ecs.requireAll :touch-damage :facing :x :y))

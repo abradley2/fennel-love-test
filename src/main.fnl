@@ -8,6 +8,7 @@
 (local movement (require :systems.movement))
 (local entity_death (require :systems.entity_death))
 (local cleanup (require :systems.cleanup))
+(local hire_cursor (require :systems.hire_cursor))
 (local map_50_50 (require :map.map_50_50))
 (local map_50_51 (require :map.map_50_51))
 
@@ -115,6 +116,7 @@
 (shove.init ecs-world)
 (entity_death.init ecs-world)
 (cleanup.init ecs-world)
+(hire_cursor.init ecs-world)
 
 (ecs.addEntity ecs-world player-state)
 

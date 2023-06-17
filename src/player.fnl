@@ -94,31 +94,40 @@
   (let [key (-> key-presses (. (length key-presses)))
         current-action (-> player-state (. :action) (. :name))
         is-attacking (-> player-state (. :attacking))]
+    (when (and (-> (. player-state :action) (. :completed-loop))
+               (-> (. player-state :action) (. :no-loop)))
+      (do
+        (tset player-state :moving false)
+        (tset player-state :attacking false)
+        (tset player-state :attack nil)
+        (-> (. player-state :action) (tset :animating true))
+        (-> (. player-state :action) (tset :name :idle))
+        (-> (. player-state :action) (tset :frame-delta 0))))
     (case key
       :space
       (when (not is-attacking)
-          (case (. player-state :facing)
-            :left
-            (do
-              (tset player-state :attacking true)
-              (tset player-state :attack
-                    {:x (-> (. player-state :x) (- 60))
-                     :y (-> (. player-state :y) (- 16))
-                     :width 60
-                     :height 48
-                     :damage 1
-                     :shove-delta-x 0
-                     :shove-delta-y 0
-                     :facing :left
-                     :moving true
-                     :shove-delta-per-frame 0})
-              (tset player-state :action
-                    {:name :attack-left
-                    :no-loop true
-                     :animating true
-                     :frame-delta 0
-                     :frames-per-quad 3
-                     :prev-action (. player-state :action)}))))
+        (case (. player-state :facing)
+          :left
+          (do
+            (tset player-state :attacking true)
+            (tset player-state :attack
+                  {:x (-> (. player-state :x) (- 60))
+                   :y (-> (. player-state :y) (- 16))
+                   :width 60
+                   :height 48
+                   :damage 1
+                   :shove-delta-x 0
+                   :shove-delta-y 0
+                   :facing :left
+                   :moving true
+                   :shove-delta-per-frame 0})
+            (tset player-state :action
+                  {:name :attack-left
+                   :no-loop true
+                   :animating true
+                   :frame-delta 0
+                   :frames-per-quad 3
+                   :prev-action (. player-state :action)}))))
       :up
       (do
         (-> player-state (. :draw) (tset 1 player-sprite-sheet))
@@ -154,14 +163,6 @@
 (fn on-update [delta player-state keyboard area]
   (resolve-keyboard)
   (let [speed (* (. player-state :speed) delta)]
-    (when (-> (. player-state :action) (. :completed-loop))
-      (when (-> (. player-state :action) (. :prev-action))
-        (do
-          (tset player-state :action
-                (-> (. player-state :action) (. :prev-action)))
-          (tset player-state :attacking false)
-          (tset player-state :attack nil)
-          (tset player-state :moving false))))
     (if (-?> (. player-state :action) (. :animating))
         (case (-> (. player-state :action) (. :name))
           :up

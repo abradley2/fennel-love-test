@@ -93,10 +93,10 @@
                                                                  CAMERA-ZOOM)))
                                    (love.graphics.rectangle :line
                                                             (* (. collision-box
-                                                                  :to-x)
+                                                                  :x)
                                                                CAMERA-ZOOM)
                                                             (* (. collision-box
-                                                                  :to-y)
+                                                                  :y)
                                                                CAMERA-ZOOM)
                                                             (* (. collision-box
                                                                   :width)

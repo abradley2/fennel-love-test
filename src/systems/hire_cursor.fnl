@@ -4,7 +4,9 @@
 (local cursor nil)
 
 (fn init-cursor [player-state]
-  {:x 0 :y 0 :cursor true})
+  {:x 0 :y 0 :cursor true
+  
+  })
 
 (fn process-hire-cursor-system [_system entity [draw delta]]
   (when (not draw)

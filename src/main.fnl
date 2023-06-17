@@ -183,7 +183,7 @@
   (if (= nil (. game-state :leaving-area))
       (let [delta (/ dt 0.0166)]
         (check-for-area-transition)
-        (player.on-update delta player-state -keyboard area))
+        (player.on-update delta -keyboard area))
       (let [delta (/ dt 0.0166)
             animate-speed (* 20 delta)
             [direction animation-offset] (. game-state :animate-transition)

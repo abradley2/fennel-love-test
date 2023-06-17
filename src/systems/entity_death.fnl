@@ -49,7 +49,7 @@
                          :height 128
                          :x-draw-offset (+ (. entity :x-draw-offset) 16)
                          :y-draw-offset (+ (. entity :y-draw-offset) 16)
-                        :zoom-mod (/ 64 92)
+                         :zoom-mod (/ 64 92)
                          :action {:name :death
                                   :frame-delta 0
                                   :frames-per-quad 8

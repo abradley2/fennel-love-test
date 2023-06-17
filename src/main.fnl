@@ -73,37 +73,38 @@
                                                           (or (. entity
                                                                  :zoom-mod)
                                                               1)))
-                                   (when (not= nil (. entity :attack))
-                                     (love.graphics.rectangle :line
-                                                              (* (. (. entity
-                                                                       :attack)
-                                                                    :x)
-                                                                 CAMERA-ZOOM)
-                                                              (* (. (. entity
-                                                                       :attack)
-                                                                    :y)
-                                                                 CAMERA-ZOOM)
-                                                              (* (. (. entity
-                                                                       :attack)
-                                                                    :width)
-                                                                 CAMERA-ZOOM)
-                                                              (* (. (. entity
-                                                                       :attack)
-                                                                    :height)
-                                                                 CAMERA-ZOOM)))
-                                   (love.graphics.rectangle :line
-                                                            (* (. collision-box
-                                                                  :x)
-                                                               CAMERA-ZOOM)
-                                                            (* (. collision-box
-                                                                  :y)
-                                                               CAMERA-ZOOM)
-                                                            (* (. collision-box
-                                                                  :width)
-                                                               CAMERA-ZOOM)
-                                                            (* (. collision-box
-                                                                  :height)
-                                                               CAMERA-ZOOM)))
+                                   ;;  (when (not= nil (. entity :attack))
+                                   ;;    (love.graphics.rectangle :line
+                                   ;;                             (* (. (. entity
+                                   ;;                                      :attack)
+                                   ;;                                   :x)
+                                   ;;                                CAMERA-ZOOM)
+                                   ;;                             (* (. (. entity
+                                   ;;                                      :attack)
+                                   ;;                                   :y)
+                                   ;;                                CAMERA-ZOOM)
+                                   ;;                             (* (. (. entity
+                                   ;;                                      :attack)
+                                   ;;                                   :width)
+                                   ;;                                CAMERA-ZOOM)
+                                   ;;                             (* (. (. entity
+                                   ;;                                      :attack)
+                                   ;;                                   :height)
+                                   ;;                                CAMERA-ZOOM)))
+                                   ;;  (love.graphics.rectangle :line
+                                   ;;                           (* (. collision-box
+                                   ;;                                 :x)
+                                   ;;                              CAMERA-ZOOM)
+                                   ;;                           (* (. collision-box
+                                   ;;                                 :y)
+                                   ;;                              CAMERA-ZOOM)
+                                   ;;                           (* (. collision-box
+                                   ;;                                 :width)
+                                   ;;                              CAMERA-ZOOM)
+                                   ;;                           (* (. collision-box
+                                   ;;                                 :height)
+                                   ;;                              CAMERA-ZOOM))
+                                   )
                                  nil)))
 
 (tset draw-system :filter (ecs.requireAll :draw))

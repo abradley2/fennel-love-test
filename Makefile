@@ -1,4 +1,5 @@
 build: .local/fennel .local/busted/
+	.local/fennel --compile src/systems/cursor.fnl > src/systems/cursor.lua
 	.local/fennel --compile src/systems/hire_cursor.fnl > src/systems/hire_cursor.lua
 	.local/fennel --compile src/systems/cleanup.fnl > src/systems/cleanup.lua
 	.local/fennel --compile src/systems/entity_death.fnl > src/systems/entity_death.lua
@@ -15,6 +16,7 @@ build: .local/fennel .local/busted/
 	.local/fennel --compile src/map/map_50_51.fnl > src/map/map_50_51.lua
 
 lint: .local/fnlfmt
+	.local/fnlfmt/bin/fnlfmt --fix src/systems/cursor.fnl
 	.local/fnlfmt/bin/fnlfmt --fix src/systems/hire_cursor.fnl
 	.local/fnlfmt/bin/fnlfmt --fix src/systems/cleanup.fnl
 	.local/fnlfmt/bin/fnlfmt --fix src/systems/entity_death.fnl

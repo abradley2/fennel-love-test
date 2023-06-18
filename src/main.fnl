@@ -222,12 +222,12 @@
     (when (= :escape key) (love.event.quit))
     (tset -keyboard key true)
     (player.on-key-pressed player-state key ecs-world)
-    (hire_cursor.on-key-pressed -keyboard)))
+    (hire_cursor.on-key-pressed ecs-world key -keyboard)))
 
 (fn love.keyreleased [key]
   (tset -keyboard key false)
   (player.on-key-released player-state -keyboard key ecs-world)
-  (hire_cursor.on-key-released -keyboard))
+  (hire_cursor.on-key-released ecs-world key -keyboard))
 
 (fn love.draw []
   (if (= nil (. game-state :leaving-area))

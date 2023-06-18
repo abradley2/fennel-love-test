@@ -9,6 +9,7 @@ build: .local/fennel .local/busted/
 	.local/fennel --compile src/systems/shove.fnl > src/systems/shove.lua
 	.local/fennel --compile src/util.fnl > src/util.lua
 	.local/fennel --compile src/enemy.fnl > src/enemy.lua
+	.local/fennel --compile src/ally.fnl > src/ally.lua
 	.local/fennel --compile src/world.fnl > src/world.lua
 	.local/fennel --compile src/player.fnl > src/player.lua
 	.local/fennel --compile src/main.fnl > src/main.lua
@@ -26,6 +27,7 @@ lint: .local/fnlfmt
 	.local/fnlfmt/bin/fnlfmt --fix src/systems/shove.fnl
 	.local/fnlfmt/bin/fnlfmt --fix src/util.fnl
 	.local/fnlfmt/bin/fnlfmt --fix src/enemy.fnl
+	.local/fnlfmt/bin/fnlfmt --fix src/ally.fnl
 	.local/fnlfmt/bin/fnlfmt --fix src/world.fnl
 	.local/fnlfmt/bin/fnlfmt --fix src/player.fnl
 	.local/fnlfmt/bin/fnlfmt --fix src/main.fnl

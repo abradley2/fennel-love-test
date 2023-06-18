@@ -83,8 +83,23 @@
           left-pressed (move-cursor :left)
           right-pressed (move-cursor :right)))))
 
-(fn on-key-pressed [keyboard] (check-keyboard keyboard))
-(fn on-key-released [keyboard] nil)
+(fn on-key-pressed [world key keyboard]
+  (case key
+    :space
+    (when (not= nil cursor)
+      (let [spawn-x (. cursor :x)
+            spawn-y (. cursor :y)]
+        (print "HIRE THEM")
+        (-> (. player :player-state) (tset :mode :default))
+        (ecs.removeEntity world cursor)
+        (set cursor nil)
+        (each [_i grid-square (ipairs cursor-grids)]
+          (ecs.removeEntity world grid-square))
+        (each [_ _ (ipairs cursor-grids)]
+          (table.remove cursor-grids 1)))))
+  (check-keyboard keyboard))
+
+(fn on-key-released [world key keyboard] nil)
 
 (fn init-cursor [player-state]
   (let [grid (create-grid player-state)

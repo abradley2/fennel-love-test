@@ -117,7 +117,6 @@
 (shove.init ecs-world)
 (entity_death.init ecs-world)
 (cleanup.init ecs-world)
-(hire_cursor.init ecs-world)
 
 (ecs.addEntity ecs-world player-state)
 
@@ -125,11 +124,13 @@
   (if (not (= nil (. area :area-systems)))
       (do
         (-?> (. area :area-systems) (. :deinit) (#($1 ecs-world)))
+        (hire_cursor.deinit ecs-world)
         (movement.deinit ecs-world))
       nil)
   (let [layers (world.read-tiled-map area-name)
         system (. map-logic area-name)] ; add to world ; TODO - Add collisions layers
     (movement.init ecs-world (. layers :Collision))
+    (hire_cursor.init ecs-world)
     (tset area :sprite-batch-groups
           (icollect [_ layer (ipairs (. layers :draw))]
             (world.create-sprite-batches layer)))

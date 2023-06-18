@@ -4,6 +4,8 @@
 (local hire-image (love.graphics.newImage :assets/Archer_Blue.png))
 (local cursor-image (love.graphics.newImage :assets/Pointer_Square.png))
 
+(local spawned-entities [])
+
 (var cursor nil)
 (local cursor-grids [])
 
@@ -125,12 +127,27 @@
       (each [_ _ (ipairs cursor-grids)]
         (table.remove cursor-grids 1)))))
 
-(fn init [world]
-  (let [system (ecs.processingSystem)]
-    (tset system :process process-hire-cursor-system)
-    (tset system :filter (ecs.requireAll :cursor))
-    (tset system :preWrap (partial hire-cursor-system-prewrap world))
-    (tset system :postWrap (partial hire-cursor-system-postwrap world))
-    (ecs.addSystem world system)))
+(var system nil)
 
-{: init : on-key-pressed : on-key-released}
+(fn init [world]
+  (let [-system (ecs.processingSystem)]
+    (tset -system :process process-hire-cursor-system)
+    (tset -system :filter (ecs.requireAll :cursor))
+    (tset -system :preWrap (partial hire-cursor-system-prewrap world))
+    (tset -system :postWrap (partial hire-cursor-system-postwrap world))
+    (ecs.addSystem world -system)
+    (set system -system)))
+
+(fn deinit [world]
+  (ecs.removeSystem world system)
+  (set cursor nil)
+  (each [_i grid-square (ipairs cursor-grids)]
+    (ecs.removeEntity world grid-square))
+  (each [_ _ (ipairs cursor-grids)]
+    (table.remove cursor-grids 1))
+  (each [_i entity (ipairs spawned-entities)]
+    (ecs.removeEntity world entity))
+  (each [_ _ (ipairs spawned-entities)]
+    (table.remove spawned-entities 1)))
+
+{: init : deinit : on-key-pressed : on-key-released}

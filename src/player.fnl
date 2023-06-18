@@ -204,7 +204,7 @@
   (table.insert key-presses key)
   (when (not= nil (. key-presses 5)) (table.remove key-presses 1))
   (case key
-    :h
+    :a
     (if (= (. player-state :mode) :hiring)
         (tset player-state :mode :default)
         (do

@@ -82,7 +82,7 @@
           right-pressed (move-cursor :right)))))
 
 (fn on-key-pressed [keyboard] (check-keyboard keyboard))
-(fn on-key-released [keyboard] (check-keyboard keyboard))
+(fn on-key-released [keyboard] nil)
 
 (fn init-cursor [player-state]
   (let [grid (create-grid player-state)

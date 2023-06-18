@@ -34,7 +34,7 @@
                :shove-delta-x 0
                :shove-delta-y 0
                :shove-delta-per-frame 0
-               :facing :up
+               :facing :down
                :moving false
                :action {:name :idle :frames-per-quad 6 :animating true}
                :quad-sets torch-red-quad-sets

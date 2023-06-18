@@ -91,19 +91,19 @@
                                    ;;                                      :attack)
                                    ;;                                   :height)
                                    ;;                                CAMERA-ZOOM)))
-                                   ;;  (love.graphics.rectangle :line
-                                   ;;                           (* (. collision-box
-                                   ;;                                 :x)
-                                   ;;                              CAMERA-ZOOM)
-                                   ;;                           (* (. collision-box
-                                   ;;                                 :y)
-                                   ;;                              CAMERA-ZOOM)
-                                   ;;                           (* (. collision-box
-                                   ;;                                 :width)
-                                   ;;                              CAMERA-ZOOM)
-                                   ;;                           (* (. collision-box
-                                   ;;                                 :height)
-                                   ;;                              CAMERA-ZOOM))
+                                    (love.graphics.rectangle :line
+                                                             (* (. collision-box
+                                                                   :x)
+                                                                CAMERA-ZOOM)
+                                                             (* (. collision-box
+                                                                   :y)
+                                                                CAMERA-ZOOM)
+                                                             (* (. collision-box
+                                                                   :width)
+                                                                CAMERA-ZOOM)
+                                                             (* (. collision-box
+                                                                   :height)
+                                                                CAMERA-ZOOM))
                                    )
                                  nil)))
 

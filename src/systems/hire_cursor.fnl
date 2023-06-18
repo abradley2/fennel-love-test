@@ -1,5 +1,6 @@
 (local ecs (require :lib.ecs))
 (local player (require :player))
+(local ally (require :ally))
 
 (local hire-image (love.graphics.newImage :assets/Archer_Blue.png))
 (local cursor-image (love.graphics.newImage :assets/Pointer_Square.png))
@@ -87,9 +88,11 @@
   (case key
     :space
     (when (not= nil cursor)
-      (let [spawn-x (. cursor :x)
-            spawn-y (. cursor :y)]
-        (print "HIRE THEM")
+      (let [spawn-x (+ 32 (. cursor :x))
+            spawn-y (+ 32 (. cursor :y))
+            archer (ally.init-archer-blue spawn-x spawn-y)]
+        (ecs.addEntity world archer)
+        (table.insert spawned-entities archer)
         (-> (. player :player-state) (tset :mode :default))
         (ecs.removeEntity world cursor)
         (set cursor nil)

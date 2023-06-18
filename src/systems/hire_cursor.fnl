@@ -77,10 +77,12 @@
                                      :hiring))
     (do
       (ecs.removeEntity world cursor)
+      (set cursor nil)
       (each [_i grid-square (ipairs cursor-grids)]
         (do
-          (ecs.removeEntity world grid-square)
-          (table.remove cursor-grids 1))))))
+          (ecs.removeEntity world grid-square)))
+      (each [_ _ (ipairs cursor-grids)]
+        (table.remove cursor-grids 1)))))
 
 (fn init [world]
   (let [system (ecs.processingSystem)]

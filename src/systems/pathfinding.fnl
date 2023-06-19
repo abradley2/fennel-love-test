@@ -9,7 +9,7 @@
     (let [x (tostring (. tile :col-zidx))
           y (tostring (. tile :row-zidx))]
       (tset tile-map x (or (. tile-map x) {}))
-      (-> (. tile-map x) (tset y true))
+      (-> (. tile-map x) (tset y false))
       tile-map)))
 
 (fn position-is-open-func [tile-map x y tile-idx?]

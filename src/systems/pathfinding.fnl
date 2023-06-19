@@ -6,11 +6,12 @@
 (var system nil)
 
 (fn position-is-open-func [tiles x y tile-idx?]
-  (let [tile-idx (or tile-idx 1)
+  (let [tile-idx (or tile-idx? 1)
         tile (. tiles tile-idx)
         next-tile-idx (+ tile-idx 1)
         does-collide (util.check-collision x y 64 64 (. tile :x) (. tile :y) 64
                                            64)]
+    (print next-tile-idx)
     (if does-collide false
         (> next-tile-idx (length tiles)) true
         (position-is-open-func tiles x y next-tile-idx))))

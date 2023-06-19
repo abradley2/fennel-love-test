@@ -22,6 +22,7 @@
                :width 64
                :height 64
                :health 2
+               :pathfinding-target :player
                :flagged-for-removal false
                :collision-box {:x-offset -32
                                :y-offset -32

@@ -9,6 +9,7 @@
 (local entity_death (require :systems.entity_death))
 (local cleanup (require :systems.cleanup))
 (local hire_cursor (require :systems.hire_cursor))
+(local pathfinding (require :systems.pathfinding))
 (local map_50_50 (require :map.map_50_50))
 (local map_50_51 (require :map.map_50_51))
 
@@ -17,8 +18,8 @@
 (local map-logic {:map_50_50.json map_50_50 :map_50_51.json map_50_51})
 
 ; (love.window.setMode 512 512 {:resizable false})
-; (love.window.setMode 768 768 {:resizable false})
-(love.window.setMode 1024 1024 {:resizable false})
+(love.window.setMode 768 768 {:resizable false})
+; (love.window.setMode 1024 1024 {:resizable false})
 
 (love.graphics.setDefaultFilter :nearest)
 
@@ -91,19 +92,19 @@
                                    ;;                                      :attack)
                                    ;;                                   :height)
                                    ;;                                CAMERA-ZOOM)))
-                                    (love.graphics.rectangle :line
-                                                             (* (. collision-box
-                                                                   :x)
-                                                                CAMERA-ZOOM)
-                                                             (* (. collision-box
-                                                                   :y)
-                                                                CAMERA-ZOOM)
-                                                             (* (. collision-box
-                                                                   :width)
-                                                                CAMERA-ZOOM)
-                                                             (* (. collision-box
-                                                                   :height)
-                                                                CAMERA-ZOOM))
+                                   ;; (love.graphics.rectangle :line
+                                   ;;                          (* (. collision-box
+                                   ;;                                :x)
+                                   ;;                             CAMERA-ZOOM)
+                                   ;;                          (* (. collision-box
+                                   ;;                                :y)
+                                   ;;                             CAMERA-ZOOM)
+                                   ;;                          (* (. collision-box
+                                   ;;                                :width)
+                                   ;;                             CAMERA-ZOOM)
+                                   ;;                          (* (. collision-box
+                                   ;;                                :height)
+                                   ;;                             CAMERA-ZOOM))
                                    )
                                  nil)))
 
@@ -125,11 +126,13 @@
       (do
         (-?> (. area :area-systems) (. :deinit) (#($1 ecs-world)))
         (hire_cursor.deinit ecs-world)
+        (pathfinding.deinit ecs-world)
         (movement.deinit ecs-world))
       nil)
   (let [layers (world.read-tiled-map area-name)
         system (. map-logic area-name)] ; add to world ; TODO - Add collisions layers
     (movement.init ecs-world (. layers :Collision))
+    (pathfinding.init ecs-world (. layers :Collision))
     (hire_cursor.init ecs-world)
     (tset area :sprite-batch-groups
           (icollect [_ layer (ipairs (. layers :draw))]

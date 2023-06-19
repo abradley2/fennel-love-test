@@ -1,34 +1,39 @@
 (local lua-star (require :lib.lua_star))
 (local ecs (require :lib.ecs))
-(local util (require :util))
 (local player (require :player))
 
 (var system nil)
 
-(fn position-is-open-func [tiles x y tile-idx?]
-  (let [tile-idx (or tile-idx? 1)
-        tile (. tiles tile-idx)
-        next-tile-idx (+ tile-idx 1)
-        does-collide (util.check-collision x y 64 64 (. tile :x) (. tile :y) 64
-                                           64)]
-    (print next-tile-idx)
-    (if does-collide false
-        (> next-tile-idx (length tiles)) true
-        (position-is-open-func tiles x y next-tile-idx))))
+(fn create-tile-map [tiles]
+  (accumulate [tile-map {} _ tile (pairs tiles)]
+    (let [x (tostring (. tile :col-zidx))
+          y (tostring (. tile :row-zidx))]
+      (tset tile-map x (or (. tile-map x) {}))
+      (-> (. tile-map x) (tset y true))
+      tile-map)))
+
+(fn position-is-open-func [tile-map x y tile-idx?]
+  (or (-?> tile-map (. x) (. y)) true))
 
 (fn process-pathfinding-system [is-open _system entity [draw delta]]
-  (if draw nil (let [player-x (-> player (. :player-state) (. :x))
-                     player-y (-> player (. :player-state) (. :y))
-                     entity-x (. entity :x)
-                     entity-y (. entity :y)
-                     path (lua-star:find 64 64 {:x entity-x :y entity-y}
+  (if draw nil (let [player-x (math.floor (-> player (. :player-state) (. :x)
+                                              (/ 32)))
+                     player-y (math.floor (-> player (. :player-state) (. :y)
+                                              (/ 32)))
+                     entity-x (math.floor (-> (. entity :x) (/ 32)))
+                     entity-y (math.floor (-> (. entity :y) (/ 32)))
+                     path (lua-star:find 32 32 {:x entity-x :y entity-y}
                                          {:x player-x :y player-y} is-open true
                                          true)]
-                 (print "GOT PATH" path))))
+                 (print "GOT PATH")
+                 (when (not= false path)
+                   (each [_ v (ipairs path)]
+                     (print (. v :x) (. v :y)))))))
 
 (fn init [world collision-tiles]
   (let [-system (ecs.processingSystem)
-        is-open (partial position-is-open-func collision-tiles)]
+        is-open (partial position-is-open-func
+                         (create-tile-map collision-tiles))]
     (tset -system :filter (ecs.requireAll :pathfinding-target))
     (tset -system :process (partial process-pathfinding-system is-open))
     (set system -system)

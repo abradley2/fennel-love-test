@@ -87,6 +87,8 @@
                          :x (+ (* col-zidx (. quad :width) (/ layer-zoom))
                                (- (. quad :width) (. map-data :tilewidth)))
                          :y (* row-zidx (. quad :height) (/ layer-zoom))
+                         : row-zidx
+                         : col-zidx
                          :width (. quad :width)
                          :height (. quad :height)
                          :visible (. layer :visible)}]
